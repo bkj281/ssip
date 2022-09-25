@@ -7,7 +7,8 @@ import django
 # this model Stores the data of the Phones Verified
 class phoneModel(models.Model):
     mobile = models.CharField(max_length=13, blank=False)
-    created_at = models.DateTimeField(default=django.utils.timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     is_verified = models.BooleanField(blank=False, default=False)
     counter = models.IntegerField(default=0, blank=False)
     ip_address = models.CharField(default='0.0.0.0', max_length=30)
