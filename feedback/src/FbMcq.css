@@ -53,3 +53,18 @@
 .flex-11 {
   flex: 11;
 }
+
+.txtarea {
+  border: 0px;
+  border-bottom: 2px solid #014DA7;
+  outline: 0px;
+  resize: none;
+  width: 100%;
+  padding: 7px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.txtarea:focus {
+  border: 1px solid #014DA7;
+}
