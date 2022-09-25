@@ -3,3 +3,7 @@ package-lock.json
 .env
 build
 .next
+__pycache__
+Procfile
+db.sqlite3
+staticfiles
