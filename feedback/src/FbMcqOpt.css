@@ -15,10 +15,12 @@
   line-height: 13px;
   color: #000000;
   margin-bottom: 8px;
+  align-self: stretch;
 }
 
 .flex-1 {
   flex: 1;
+  text-align: center;
 }
 
 .flex-11 {
