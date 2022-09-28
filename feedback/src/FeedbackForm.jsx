@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import './FeedbackForm.css';
 import FbMcq from './FBMcq';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function FeedbackForm() {
   const [res, setRes] = useState({ res1: '', res2: '', res3: '', res4: '' });
+  let params = useParams();
+  let navigate = useNavigate();
+  if (!params.id) {
+    navigate('/');
+  }
   const onChangeHandler = (resText, qNo) => {
     let { res1, res2, res3, res4 } = res;
     if (qNo === 1) {
