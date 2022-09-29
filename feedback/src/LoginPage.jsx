@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import './LoginPage.css';
 import Gujarat_Police_Logo from './assets/Gujarat_Police_Logo_1.png';
 
-function LoginPage() {
+function LoginPage({ setPid, setOtpid }) {
   let navigate = useNavigate();
   let params = useParams();
   const [verify, setVerify] = useState(false);
   const [phoneNO, setPhoneNo] = useState('');
   const [OTP, setOTP] = useState('');
+
+  useEffect(() => {
+    if (params.id) {
+      setPid(Number(params.id));
+    }
+  }, []);
   
   const handleChange = (e) => {
     let val = e.target.value;
@@ -40,6 +46,8 @@ function LoginPage() {
       });
       const result = await res.json();
       console.log(result);
+      setOtpid(Number(result.id));
+      // setOtpid(Number(1));
       setVerify(true);
     } else {
       // send OTP using API
@@ -57,14 +65,14 @@ function LoginPage() {
       if (result === 'You are authorised') {
         alert(result);
         // render feedback form
-        navigate(`/feedback/${params.id}`);
+        navigate(`/feedback`);
       } else {
         alert (result);
         // throw error
       }
     }
   };
-  
+
   return (
     <div className='login-flex'>
       <div style={{ flex: '4', display:' block', textAlign: 'center' }}>

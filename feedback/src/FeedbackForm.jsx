@@ -3,13 +3,11 @@ import './FeedbackForm.css';
 import FbMcq from './FBMcq';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function FeedbackForm() {
+function FeedbackForm({ pid, otpid }) {
   const [res, setRes] = useState({ res1: '', res2: '', res3: '', res4: '' });
   let params = useParams();
   let navigate = useNavigate();
-  if (!params.id) {
-    navigate('/');
-  }
+  
   const onChangeHandler = (resText, qNo) => {
     let { res1, res2, res3, res4 } = res;
     if (qNo === 1) {
@@ -23,10 +21,34 @@ function FeedbackForm() {
     }
     setRes({ res1, res2, res3, res4 });
   };
-  const handleSubmit = (e) => {
-    e.preventDeafault();
-    console.log(res);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log({
+      'res_id': otpid,
+      'res1': res.res1,
+      'res2': res.res2,
+      'res3': res.res3,
+      'res4': res.res4,
+      // '': pid,
+    });
     // call api and render next page
+    const response = await fetch('https://ssip-project.herokuapp.com/feedback/form/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token 4e2ffb12ab52213e89eb311e2b65f1fcd081698d',
+      },
+      body: JSON.stringify({
+        'res_id': otpid,
+        'res1': res.res1,
+        'res2': res.res2,
+        'res3': res.res3,
+        'res4': res.res4,
+        // '': pid,
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
   };
   const data = [
     {
@@ -234,7 +256,7 @@ function FeedbackForm() {
           </div>
           <button
             className="flex-item flex-cont flex-cont-ques btn-submit"
-            onClick={() => handleSubmit()}
+            onClick={handleSubmit}
           >Submit</button>
         </div>
       </form>
