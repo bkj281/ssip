@@ -12,7 +12,9 @@ function LoginPage({ setPid, setOtpid }) {
 
   useEffect(() => {
     if (params.id) {
-      setPid(Number(params.id));
+      // check if police id is valid or not
+      // If valid set Pid else redirect to HomePage
+      setPid(params.id);
     }
   }, []);
   

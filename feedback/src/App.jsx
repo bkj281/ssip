@@ -6,7 +6,7 @@ import HomePage from './HomePage';
 import LoginPage from './LoginPage';
 
 function App() {
-  const [pid, setPid] = useState(0);
+  const [pid, setPid] = useState(null);
   const [otpid, setOtpid] = useState(0);
   const handlePid = (x) => {
     setPid(x);
