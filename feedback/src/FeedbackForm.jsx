@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './FeedbackForm.css';
 import FbMcq from './FBMcq';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,6 +8,12 @@ function FeedbackForm({ pid, otpid }) {
   let params = useParams();
   let navigate = useNavigate();
   
+  useEffect(() => {
+    if (!pid) {
+      navigate('/');
+    }
+  }, []);
+
   const onChangeHandler = (resText, qNo) => {
     let { res1, res2, res3, res4 } = res;
     if (qNo === 1) {
@@ -49,6 +55,7 @@ function FeedbackForm({ pid, otpid }) {
     });
     const result = await response.json();
     console.log(result);
+    alert('Feedback Form Submitted Successfully');
   };
   const data = [
     {
