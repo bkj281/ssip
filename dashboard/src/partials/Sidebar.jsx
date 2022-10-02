@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { VscDashboard } from 'react-icons/vsc'
+import { ImQrcode } from 'react-icons/im'
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const location = useLocation();
@@ -121,21 +123,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 >
                   <div className="flex items-center justify-between">
                     <div className="grow flex items-center">
-                      <svg className="shrink-0 h-6 w-6" viewBox="0 0 24 24">
-                        <path
-                          className={`fill-current text-slate-400 ${(pathname === '/' || pathname.includes('dashboard')) && '!text-indigo-500'
-                            }`}
-                          d="M12 0C5.383 0 0 5.383 0 12s5.383 12 12 12 12-5.383 12-12S18.617 0 12 0z"
-                        />
-                        <path
-                          className={`fill-current text-slate-600 ${(pathname === '/' || pathname.includes('dashboard')) && 'text-indigo-600'}`}
-                          d="M12 3c-4.963 0-9 4.037-9 9s4.037 9 9 9 9-4.037 9-9-4.037-9-9-9z"
-                        />
-                        <path
-                          className={`fill-current text-slate-400 ${(pathname === '/' || pathname.includes('dashboard')) && 'text-indigo-200'}`}
-                          d="M12 15c-1.654 0-3-1.346-3-3 0-.462.113-.894.3-1.285L6 6l4.714 3.301A2.973 2.973 0 0112 9c1.654 0 3 1.346 3 3s-1.346 3-3 3z"
-                        />
-                      </svg>
+                      <VscDashboard size={30} />
                       <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                         Dashboard
                       </span>
@@ -183,20 +171,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     }`}
                 >
                   <div className="flex items-center">
-                    <svg className="shrink-0 h-6 w-6" viewBox="0 0 24 24">
-                      <path
-                        className={`fill-current text-slate-600 ${pathname.includes('qr-generator') && 'text-indigo-500'}`}
-                        d="M16 13v4H8v-4H0l3-9h18l3 9h-8Z"
-                      />
-                      <path
-                        className={`fill-current text-slate-400 ${pathname.includes('qr-generator') && 'text-indigo-300'}`}
-                        d="m23.72 12 .229.686A.984.984 0 0 1 24 13v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1v-8c0-.107.017-.213.051-.314L.28 12H8v4h8v-4H23.72ZM13 0v7h3l-4 5-4-5h3V0h2Z"
-                      />
-                    </svg>
+                    <ImQrcode size={23} />
                     <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">QR Generator</span>
                   </div>
                 </NavLink>
               </li>
+
               {/* Calendar */}
               <li style={{ padding: '0.5rem 0.75rem' }} className={`rounded-sm mb-0.5 last:mb-0 ${pathname.includes('calendar') && 'bg-slate-900'}`}>
                 <NavLink

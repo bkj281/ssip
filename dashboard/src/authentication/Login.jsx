@@ -65,7 +65,7 @@ const Login = () => {
             </h2>
             <Form onSubmit={handleSubmit}>
               <Form.Group className='mb-3'>
-                <Form.Label>Email Address</Form.Label>
+                <Form.Label className='form-label2'>Email Address</Form.Label>
                 <Form.Control
                   type="email"
                   value={email}
@@ -73,7 +73,7 @@ const Login = () => {
                 />
               </Form.Group>
               <Form.Group className='mb-3'>
-                <Form.Label>Password</Form.Label>
+                <Form.Label className='form-label2'>Password</Form.Label>
                 <Form.Control
                   type="password"
                   value={password}
