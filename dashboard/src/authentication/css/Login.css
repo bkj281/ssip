@@ -1,0 +1,31 @@
+.span:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.form-label2 {
+  position: relative;
+  top: 20px;
+  left: 10px;
+  font-size: 0.9rem;
+  background: #fff;
+  padding: 0 0.4rem;
+}
+
+input[type=email] {
+  padding-top: 0.7rem;
+  padding-bottom: 0.4rem;
+  font-size: 0.8rem;
+}
+
+input[type=password] {
+  padding-top: 0.7rem;
+  padding-bottom: 0.4rem;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .row {
+    width: 95% !important;
+  }
+}

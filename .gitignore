@@ -8,3 +8,7 @@ Procfile
 db.sqlite3
 staticfiles
 creds.py
+.DS_Store
+dist
+dist-ssr
+*.local
