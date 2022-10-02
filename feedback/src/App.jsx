@@ -1,17 +1,32 @@
-import { useState } from 'react'
-import './App.css'
-import FeedbackForm from './FeedBackForm'
-import LoginPage from './LoginPage'
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './App.css';
+import FeedbackForm from './FeedBackForm';
+import HomePage from './HomePage';
+import LoginPage from './LoginPage';
 
 function App() {
-  // const [count, setCount] = useState(0)
+  const [pid, setPid] = useState(null);
+  const [otpid, setOtpid] = useState(0);
+  const handlePid = (x) => {
+    setPid(x);
+  };
+  const handleOtpid = (x) => {
+    setOtpid(x);
+  };
 
   return (
     <div className="App">
-      {/* <FeedbackForm /> */}
-      <LoginPage />
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/feedback' element={<FeedbackForm pid={pid} otpid={otpid} />} />
+          <Route path='/:id' element={<LoginPage setPid={handlePid} setOtpid={handleOtpid} />} />
+          <Route path='*' element={<HomePage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
