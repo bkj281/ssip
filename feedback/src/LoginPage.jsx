@@ -32,7 +32,7 @@ function LoginPage({ setPid, setOtpid }) {
     }
   }
   
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     if (!verify) {
       // check if phone number is correct (validation)
       if (phoneNO.length != 10) {
@@ -75,6 +75,12 @@ function LoginPage({ setPid, setOtpid }) {
     }
   };
 
+  const onEnter = (e) => {
+    if(e.keyCode == 13){
+      handleSubmit();
+    }
+  };
+
   return (
     <div className='login-flex'>
       <div style={{ flex: '4', display:' block', textAlign: 'center' }}>
@@ -95,6 +101,7 @@ function LoginPage({ setPid, setOtpid }) {
           className='inp-txt'
           value={phoneNO}
           onChange={handleChange}
+          onKeyDown={onEnter}
           readOnly={verify}
         />
       </div>
@@ -106,6 +113,7 @@ function LoginPage({ setPid, setOtpid }) {
           className='inp-txt'
           value={OTP}
           onChange={handleChange}
+          onKeyDown={onEnter}
         />
       </div>: null}
       <div className='div-inp-txt'>

@@ -56,6 +56,7 @@ function FeedbackForm({ pid, otpid }) {
     const result = await response.json();
     console.log(result);
     alert('Feedback Form Submitted Successfully');
+    navigate('/submitted');
   };
   const data = [
     {

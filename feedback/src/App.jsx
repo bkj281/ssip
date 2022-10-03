@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import FeedbackForm from './FeedBackForm';
 import HomePage from './HomePage';
+import LastPage from './LastPage';
 import LoginPage from './LoginPage';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/feedback' element={<FeedbackForm pid={pid} otpid={otpid} />} />
+          <Route path='/submitted' element={<LastPage />} />
           <Route path='/:id' element={<LoginPage setPid={handlePid} setOtpid={handleOtpid} />} />
           <Route path='*' element={<HomePage />} />
         </Routes>

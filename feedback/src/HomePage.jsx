@@ -16,6 +16,12 @@ function HomePage() {
     e.preventDefault();
     navigate(`/${pid}`);
   };
+
+  const onEnter = (e) => {
+    if(e.keyCode == 13){
+      handleSubmit(e);
+    }
+  };
   
   return (
     <div className='login-flex'>
@@ -37,6 +43,7 @@ function HomePage() {
           className='inp-txt'
           value={pid}
           onChange={handleChange}
+          onKeyDown={onEnter}
         />
       </div>
       <div className='div-inp-txt'>
