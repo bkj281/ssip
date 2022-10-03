@@ -32,7 +32,7 @@ function LoginPage({ setPid, setOtpid }) {
     }
   }
   
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     if (!verify) {
       // check if phone number is correct (validation)
       if (phoneNO.length != 10) {
@@ -40,7 +40,7 @@ function LoginPage({ setPid, setOtpid }) {
         return;
       }
       // send Phone No using API
-      const res = await fetch(`https://ssip-project.herokuapp.com/verify/time_based/${phoneNO}/`, {
+      const res = await fetch(`${import.meta.env.VITE_DEV_URL}/verify/time_based/${phoneNO}/`, {
         method: 'GET',
         headers: {
           'Authorization': 'Token 4e2ffb12ab52213e89eb311e2b65f1fcd081698d',
@@ -53,7 +53,7 @@ function LoginPage({ setPid, setOtpid }) {
       setVerify(true);
     } else {
       // send OTP using API
-      const res = await fetch(`https://ssip-project.herokuapp.com/verify/time_based/${phoneNO}/`, {
+      const res = await fetch(`${import.meta.env.VITE_DEV_URL}/verify/time_based/${phoneNO}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,6 +72,12 @@ function LoginPage({ setPid, setOtpid }) {
         alert (result);
         // throw error
       }
+    }
+  };
+
+  const onEnter = (e) => {
+    if(e.keyCode == 13){
+      handleSubmit();
     }
   };
 
@@ -95,6 +101,7 @@ function LoginPage({ setPid, setOtpid }) {
           className='inp-txt'
           value={phoneNO}
           onChange={handleChange}
+          onKeyDown={onEnter}
           readOnly={verify}
         />
       </div>
@@ -106,6 +113,7 @@ function LoginPage({ setPid, setOtpid }) {
           className='inp-txt'
           value={OTP}
           onChange={handleChange}
+          onKeyDown={onEnter}
         />
       </div>: null}
       <div className='div-inp-txt'>
