@@ -38,7 +38,7 @@ function FeedbackForm({ pid, otpid }) {
       // '': pid,
     });
     // call api and render next page
-    const response = await fetch('https://ssip-project.herokuapp.com/feedback/form/', {
+    const response = await fetch(`${import.meta.env.VITE_DEV_URL}/feedback/form/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
