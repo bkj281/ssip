@@ -1,6 +1,6 @@
 from django.urls import path, include, re_path
-from .views import Stationdata
+from .views import AddStation
 
 urlpatterns = [
-    re_path('filter/', Stationdata.as_view()),
+    re_path('add/', AddStation.as_view()),
 ]
