@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
 import { VscDashboard } from 'react-icons/vsc'
 import { ImQrcode } from 'react-icons/im'
 import { AiOutlineUserAdd } from 'react-icons/ai'
@@ -26,6 +27,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
   });
+
+  useEffect(() => {
+    if (!localStorage.getItem('access')) {
+      toast.error('Login First!', { theme: "dark", toastId: "duplicate" });
+      navigate('/login');
+    }
+  }, []);
 
   // close if the esc key is pressed
   useEffect(() => {
