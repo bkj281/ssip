@@ -15,11 +15,11 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/sign-in`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email,
+          username:email,
           password
         }),
       });
