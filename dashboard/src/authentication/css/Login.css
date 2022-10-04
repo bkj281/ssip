@@ -24,6 +24,12 @@ input[type=password] {
   font-size: 0.8rem;
 }
 
+.captcha {
+  background-image: url('../../assets/images/capbg.jpg');
+  font-size: 1.2rem;
+  color: #14195d;
+}
+
 @media (max-width: 768px) {
   .row {
     width: 95% !important;
