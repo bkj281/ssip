@@ -5,7 +5,6 @@ import gp from '../assets/images/gujarat-police.png'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import newCaptcha from 'otp-generators'
-import bg from '../assets/images/capbg.jpg'
 import { HiOutlineRefresh } from 'react-icons/hi'
 
 const Login = () => {
