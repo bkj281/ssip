@@ -7,35 +7,33 @@ from .models import phoneModel
 import base64
 from twilio.rest import Client
 from decouple import config
-from rest_framework.permissions import IsAuthenticated
-import geocoder
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.utils import timezone
 # Create your models here.
 import django
+import geocoder
+
 
 # This class returns the string needed to generate the key
 class generateKey:
     @staticmethod
     def returnValue(phone):
-        return str(phone) + str(datetime.date(datetime.now())) + "Some Random Secret Key"
+        return str(phone) + str(datetime.date(datetime.now()))
 
 # Time after which OTP will expire
 EXPIRY_TIME = 50 # seconds
 
+
 class getPhoneNumberRegistered_TimeBased(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [AllowAny]
     # Get to Create a call for OTP
     @staticmethod
     def get(request, phone):
-
-        context = {}
-
         x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forw_for is not None:
             ip = x_forw_for.split(',')[0]
         else:
             ip = request.META.get('REMOTE_ADDR')
-
         add = geocoder.ip(ip)
         city = add.city
         lat_lng = add.latlng
@@ -45,13 +43,14 @@ class getPhoneNumberRegistered_TimeBased(APIView):
         except ObjectDoesNotExist:
             phoneModel.objects.create(
                 mobile=phone,
+                ip_address=ip
             )
             mobile = phoneModel.objects.get(mobile=phone)  # user Newly created Model
 
-        mobile.ip_address = ip
+
+        mobile.is_verified = False
         mobile.city = city
         mobile.lat_lng = lat_lng
-        mobile.is_verified = False
         mobile.counter += 1
         mobile.save()  # Save the data
 
@@ -64,15 +63,15 @@ class getPhoneNumberRegistered_TimeBased(APIView):
         from_number = config('from_number')
 
         client = Client(account_sid, auth_token)
-
+        phone_no = phoneModel.objects.get(mobile=phone)
         message = client.messages.create(
             body=f'Your OTP is {OTP.now()}',
             from_=from_number,
-            to=f'+91{phoneModel.objects.get(mobile=phone)}'
+            to=f'+91{phone_no.mobile}'
         )
 
         # Using Multi-Threading send the OTP Using Messaging Services like Twilio or Fast2sms
-        return Response({"OTP": OTP.now(), "id": mobile.id}, status=200)  # Just for demonstration
+        return Response({"id": mobile.id}, status=200)  # Just for demonstration
 
     # This Method verifies the OTP
     @staticmethod
