@@ -55,4 +55,30 @@ class AddStation(APIView):
                     "message": "Station created successfully"
                 }
         )
+
+class GetStationNameById(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request): 
+        response = request.data
+        station_id = response['station_id']
+
+        try:
+            stationName = stationModel.objects.get(station_id = station_id)
+            
+            return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "success": "true",
+                    "message": stationName.station_name
+                }
+            )
+        except:
+            return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "success": "false",
+                    "message": "Station id doesn't exist"
+                }
+            )
+
         
