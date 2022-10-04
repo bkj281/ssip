@@ -11,7 +11,6 @@ const Login = () => {
 
   const [username, setEmail] = useState("")
   const [password, setPwd] = useState("")
-  const [verify, setVerify] = useState(true)
   const [captcha, setCaptcha] = useState("")
   const [check, setCheck] = useState("")
 
