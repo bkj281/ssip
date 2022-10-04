@@ -9,6 +9,7 @@ from django.conf import settings
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from stations.models import stationModel
+from rest_framework import status
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -35,19 +36,19 @@ class RegisterHere(APIView):
         role = request.data['role']
         station_id = request.data['station_id']
 
-        station = stationModel.objects.get(station_id=station_id)
+        try:
+            station = stationModel.objects.get(station_id=station_id)
+        except:
+            return Response('Station does not exists.', status=status.HTTP_404_NOT_FOUND)
 
         station.email=username
         station.save()
-        if role=='Admin':
-            role=1
-        else:
-            role=2
+        
         try:
             users = User.objects.create_user(username=username, password=password)
 
             if users:
-                users.groups.add(role)
+                users.groups.add(2)
                 users.save()
                 return Response('Data is stored', status=200)
             else:

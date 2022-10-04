@@ -1,4 +1,0 @@
--r requirements-dev.txt
-gunicorn
-django-cors-headers
-Pillow
