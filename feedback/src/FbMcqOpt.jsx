@@ -1,3 +1,4 @@
+import React from 'react';
 import './FbMcqOpt.css'
 
 function FbMcqOpt({ qNo, optNo, option, res, onChangeHandler }) {

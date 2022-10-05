@@ -1,16 +1,21 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './FeedbackForm.css';
 import FbMcq from './FBMcq';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function FeedbackForm({ pid, otpid }) {
+import { toast } from 'react-toastify';
+
+function FeedbackForm({ pid, otpid, pname }) {
   const [res, setRes] = useState({ res1: '', res2: '', res3: '', res4: '' });
-  let params = useParams();
   let navigate = useNavigate();
   
   useEffect(() => {
-    if (!pid) {
+    if (!pid || !pname) {
+      toast.warn('Invalid Police Station ID !', { toastId: 'invalid_pid' });
       navigate('/');
+    } else if (!otpid) {
+      toast.warn('Unauthorized user!', { toastId: 'unauthorized' });
+      navigate(`/${pid}`);
     }
   }, []);
 
@@ -38,11 +43,11 @@ function FeedbackForm({ pid, otpid }) {
       // '': pid,
     });
     // call api and render next page
-    const response = await fetch(`${import.meta.env.VITE_DEV_URL}/feedback/form/`, {
+    const response = await toast.promise(fetch(`${import.meta.env.VITE_DEV_URL}/feedback/form/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Token 4e2ffb12ab52213e89eb311e2b65f1fcd081698d',
+        // 'Authorization': 'Token 4e2ffb12ab52213e89eb311e2b65f1fcd081698d',
       },
       body: JSON.stringify({
         'res_id': otpid,
@@ -52,10 +57,10 @@ function FeedbackForm({ pid, otpid }) {
         'res4': res.res4,
         // '': pid,
       }),
-    });
-    const result = await response.json();
+    }), { pending: 'Submiting Your Feedback...', error: 'Error, unable to submit feedback!' }, { toastId: 'feedback_form' });
+    const result = await toast.promise(response.json(), { pending: 'Please wait...', error: 'Something went wrong :(' }, { toastId: 'feedback_response' });
     console.log(result);
-    alert('Feedback Form Submitted Successfully');
+    toast.success('Feedback Form Submitted Successfully', { toastId: 'submitted' });
     navigate('/submitted');
   };
   const data = [
@@ -104,59 +109,17 @@ function FeedbackForm({ pid, otpid }) {
       <div className="fb-form-header">
         <h1 className="fb-heading">FeedBack</h1>
         <div className="fb-cmb-sty">
-          <select name="city" className="fb-cmb">
+          {/* <select name="city" className="fb-cmb">
             <option value="Maninagar">Maninagar</option>
             <option value="Ahmedabad">Ahmedabad</option>
-          </select>
+          </select> */}
+          <input className="fb-cmb" type="text" value={pname} readOnly />
         </div>
       </div>
       <form action="" method="">
         <div className="flex-cont" style={{ alignItems: 'stretch' }}>
           {mcqs}
-          
-          {/* <div className="flex-item flex-cont flex-cont-ques">
-            <div className="flex-item flex-item-ques">
-              <label className="flex flex-ques">
-                <span className="flex-item flex-1">1. </span>
-                <span className="flex-item flex-11">How did you come to the police station?</span>
-              </label>
-            </div>
-            <div className="flex-item flex-item-opts">
-              <div className="flex">
-                <span className="flex-item flex-1">
-                  <input id="q1-opt1" type="radio" name="ques1" value="a" />
-                </span>
-                <span className="flex-item flex-11">
-                  <label htmlFor="q1-opt1">a. Through a person known to a police officer</label>
-                </span>
-              </div>
-            </div>
-            <div className="flex-item flex-item-opts">
-              <div className="flex">
-                <span className="flex-item flex-1">
-                  <input id="q1-opt2" type="radio" name="ques1" value="b" />
-                </span>
-                <span className="flex-item flex-11">
-                  <label htmlFor="q1-opt2">b. With a neighbour/ local leader</label>
-                </span>
-              </div>
-            </div>
-            <div className="flex-item flex-item-opts">
-              <div className="flex">
-                <span className="flex-item flex-1">
-                  <input id="q1-opt3" type="radio" name="ques1" value="c" />
-                </span>
-                <span className="flex-item flex-11">
-                  <label htmlFor="q1-opt3">c. On your own</label>
-                </span>
-              </div>
-            </div>
-          </div> */}
-          {/* <FbMcq
-            qNo={1}
-            question={'How did you come to the police station?'}
-            opts={opts1}
-          /> */}
+          {/* Rating question - Last */}
           <div className="flex-item flex-cont flex-cont-ques">
             <div className="flex-item flex-item-ques">
               <label className="flex flex-ques">

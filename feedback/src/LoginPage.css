@@ -1,6 +1,6 @@
 .login-flex {
   display: flex;
-  height: 100vh;
+  height: 95vh;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
@@ -28,6 +28,8 @@
   font-weight: 400;
   font-size: 32px;
   line-height: 39px;
+  width: 80%;
+  margin: auto;
 }
 
 .div-inp-txt {
@@ -98,4 +100,17 @@
 
 .inp-lbl::before {
   content: unset;
+}
+
+.confirm-box__actions button {
+  background-color: #ebebeb;
+}
+
+.confirm-box {
+  left: 2% !important;
+  top: 2% !important;
+}
+
+.confirm-box__content {
+  width: 250px !important;
 }

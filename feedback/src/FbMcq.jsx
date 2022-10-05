@@ -1,3 +1,4 @@
+import React from 'react';
 import './FbMcq.css';
 import FbMcqOpt from './FbMcqOpt';
 

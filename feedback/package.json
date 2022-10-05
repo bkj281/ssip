@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "react": "^18.2.0",
+    "react-confirm-box": "^1.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.1"
+    "react-router-dom": "^6.4.1",
+    "react-toastify": "^9.0.8"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",

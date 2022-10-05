@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { confirm } from "react-confirm-box";
 import './LoginPage.css';
 import Gujarat_Police_Logo from './assets/Gujarat_Police_Logo_1.png';
 
-function LoginPage({ setPid, setOtpid }) {
+import { toast } from 'react-toastify';
+
+function LoginPage({ setPid, setOtpid, setPname }) {
   let navigate = useNavigate();
   let params = useParams();
   const [verify, setVerify] = useState(false);
@@ -12,11 +15,55 @@ function LoginPage({ setPid, setOtpid }) {
 
   useEffect(() => {
     if (params.id) {
-      // check if police id is valid or not
-      // If valid set Pid else redirect to HomePage
-      setPid(params.id);
+      verifyPId();
     }
   }, []);
+
+  const verifyPId = async () => {
+    try {
+      // check if police id is valid or not
+      const res = await toast.promise(fetch(`${import.meta.env.VITE_DEV_URL}/station/get/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          "station_id" : params.id,
+        }),
+      }), { pending: 'Please Wait...' }, { toastId: 'get_station' } );
+      // console.log(res);
+      const result = await res.json();
+      console.log(result);
+      // If valid set Pid else redirect to HomePage
+      if (res.status === 200) {
+        handleConfirm(result.message);
+      } else {
+        // redirect
+        toast.error(result.message, { toastId: 'invalid_pid' });
+        navigate('/');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Error in verifying!', { toastId: 'error' });
+      navigate('/');
+    }
+  };
+
+  const handleConfirm = async (mssg) => {
+    try {
+      const result = await confirm(`Are you in Police station ${mssg}`);
+      if (!result) {
+        toast.info('Please enter Police station ID', { toastId: 'enter_pid' });
+        navigate('/');
+      } else {
+        toast.info('Login with Phone No.', { toastId: 'login_phone' });
+        setPid(params.id);
+        setPname(mssg);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Something went wrong :(', { toastId: 'error'});
+      navigate('/');
+    }
+  };
   
   const handleChange = (e) => {
     let val = e.target.value;
@@ -24,10 +71,14 @@ function LoginPage({ setPid, setOtpid }) {
       // updating state only when value is number and it's length is less than 11
       if (!Number.isNaN(Number(val)) && val.length < 11) {
         setPhoneNo(val);
+      } else {
+        toast.warn('Phone No should be of 10 digits!', { toastId: 'validate' });
       }
     } else if (e.target.name === 'OTP') {
       if (!Number.isNaN(Number(val)) && val.length < 7) {
         setOTP(val);
+      } else {
+        toast.warn('OTP should be of 6 digits!', { toastId: 'validate' });
       }
     }
   }
@@ -37,40 +88,42 @@ function LoginPage({ setPid, setOtpid }) {
       // check if phone number is correct (validation)
       if (phoneNO.length != 10) {
         // throw error
+        toast.warn("Invalid Phone Number!", { toastId: 'invalid_phone' });
         return;
       }
       // send Phone No using API
-      const res = await fetch(`${import.meta.env.VITE_DEV_URL}/verify/time_based/${phoneNO}/`, {
+      const res = await toast.promise(fetch(`${import.meta.env.VITE_DEV_URL}/verify/time_based/${phoneNO}/`, {
         method: 'GET',
-        headers: {
-          'Authorization': 'Token 4e2ffb12ab52213e89eb311e2b65f1fcd081698d',
-        },
-      });
-      const result = await res.json();
+        // headers: {
+        //   'Authorization': 'Token 4e2ffb12ab52213e89eb311e2b65f1fcd081698d',
+        // },
+      }), { pending: 'Sending OTP...', error: 'Error in sending OTP' }, { toastId: 'send_otp' } );
+      const result = await toast.promise(res.json(), { pending: 'Please wait...', error: 'Something went wrong :(' }, { toastId: 'otp_id' });
       console.log(result);
       setOtpid(Number(result.id));
       // setOtpid(Number(1));
+      toast.info('OTP sent! Please Enter OTP.', { toastId: 'otp_info'});
       setVerify(true);
     } else {
       // send OTP using API
-      const res = await fetch(`${import.meta.env.VITE_DEV_URL}/verify/time_based/${phoneNO}/`, {
+      const res = await toast.promise(fetch(`${import.meta.env.VITE_DEV_URL}/verify/time_based/${phoneNO}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Token 4e2ffb12ab52213e89eb311e2b65f1fcd081698d',
+          // 'Authorization': 'Token 4e2ffb12ab52213e89eb311e2b65f1fcd081698d',
         },
         body: JSON.stringify({ 'otp' : OTP }),
-      });
-      const result = await res.json();
+      }), { pending: 'Verifying OTP...', error: 'Invalid OTP!' }, { toastId: 'verify_otp' });
+      const result = await toast.promise(res.json(), { pending: 'Please wait...', error: 'Something went wrong :(' }, { toastId: 'otp_status' });
       console.log(result);
       // let result = 'You are authorised';
       if (result === 'You are authorised') {
-        alert(result);
+        toast.success(result, { toastId: 'authorized' });
         // render feedback form
         navigate(`/feedback`);
       } else {
-        alert (result);
         // throw error
+        toast.error(result[0], { toastId: 'unauthorized' });
       }
     }
   };
@@ -90,7 +143,7 @@ function LoginPage({ setPid, setOtpid }) {
           alt='Gujarat Police Logo'
         />
       </div>
-      <div style={{ flex: '1', alignSelf: 'flex-start', paddingLeft: '3em', paddingRight: '3em' }}>
+      <div style={{ flex: '1', alignSelf: 'flex-start', width: '100%' }}>
         <h1 className='wlcm'>Welcome!</h1>
       </div>
       <div className='div-inp-txt'>
