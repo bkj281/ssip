@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap'
@@ -18,6 +18,28 @@ const Registration = () => {
     district: "",
     subdivision: ""
   })
+
+  const [flag, setFlag] = useState(true);
+
+  const [districts, setDistricts] = useState([]);
+  const [subdivisions, setSubdivisions] = useState([]);
+
+  useEffect(() => {
+    (
+      async () => {
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/station/districts/get`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        const result = await res.json();
+        console.log(result);
+        if (result.message.length > 0)
+          setDistricts(result.message);
+      }
+    )();
+  }, []);
 
   const [layout, setLayout] = useState({
     color: "#14195d",
@@ -89,6 +111,24 @@ const Registration = () => {
       return;
     if (name === "station_id")
       value = value.toUpperCase();
+    if (name === "district") {
+      console.log(value);
+      (async () => {
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/station/sub-division/get`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            district: value
+          })
+        });
+        const result = await res.json();
+        console.log(result);
+        if (result.message.length > 0)
+          setSubdivisions(result.message);
+      })();
+    }
 
     setData((old) => {
       return {
@@ -202,16 +242,16 @@ const Registration = () => {
                     <Form.Group as={Col}>
                       <Form.Label>District</Form.Label>
                       <Form.Select name="district" value={data.district} onChange={handleChange} required>
-                        <option>Choose...</option>
-                        <option>...</option>
+                        <option value="" selected disabled>Select District</option>
+                        {districts.map((d, id) => <option key={id} value={d}>{d}</option>)}
                       </Form.Select>
                     </Form.Group>
 
                     <Form.Group as={Col}>
                       <Form.Label>Sub Division</Form.Label>
                       <Form.Select name="subdivision" value={data.subdivision} onChange={handleChange} required>
-                        <option>Choose...</option>
-                        <option>...</option>
+                        <option value="" selected disabled>Select SubDivision</option>
+                        {subdivisions.map((d, id) => <option key={id} value={d}>{d}</option>)}
                       </Form.Select>
                     </Form.Group>
                   </Row>
