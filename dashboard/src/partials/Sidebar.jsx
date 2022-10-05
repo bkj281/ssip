@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
 import { VscDashboard } from 'react-icons/vsc'
 import { ImQrcode } from 'react-icons/im'
 import { AiOutlineUserAdd } from 'react-icons/ai'
@@ -26,6 +27,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
   });
+
+  useEffect(() => {
+    if (!localStorage.getItem('access')) {
+      toast.error('Login First!', { theme: "dark", toastId: "duplicate" });
+      navigate('/login');
+    }
+  }, []);
 
   // close if the esc key is pressed
   useEffect(() => {
@@ -174,7 +182,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
 
               {/* Logout */}
-              <li style={{ padding: '0.5rem 0.75rem' }} className={`rounded-sm mb-0.5 last:mb-0 ${pathname.includes('register-station') && 'bg-slate-900'}`}>
+              <li style={{ padding: '0.5rem 0.75rem' }} className={`rounded-sm mb-0.5 last:mb-0 ${pathname.includes('logout') && 'bg-slate-900'}`}>
                 <div
                   className={`text-decoration-none block text-slate-200 hover:text-white truncate transition duration-150}`}
                   style={{ cursor: 'pointer' }}
