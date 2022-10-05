@@ -9,15 +9,11 @@ from django.contrib.auth.models import User
 
 from otp.utils import Util
 from stations.models import stationModel
-<<<<<<< HEAD
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-=======
-from rest_framework import status
->>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -40,7 +36,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class RegisterHere(APIView):
     permission_classes = [IsAuthenticated]
 
-<<<<<<< HEAD
     def post(self, request):
         if request.user.groups.all().values_list()[0][1] == 'Admin':
 
@@ -194,24 +189,3 @@ class NewPassword(generics.GenericAPIView):
             },
             status=status.HTTP_200_OK
         )
-=======
-        try:
-            station = stationModel.objects.get(station_id=station_id)
-        except:
-            return Response('Station does not exists.', status=status.HTTP_404_NOT_FOUND)
-
-        station.email=username
-        station.save()
-        
-        try:
-            users = User.objects.create_user(username=username, password=password)
-
-            if users:
-                users.groups.add(2)
-                users.save()
-                return Response('Data is stored', status=200)
-            else:
-                return Response('Data cannot be stored, try again later', status=400)
-        except:
-            return Response('User Already Exists', status=400)
->>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411

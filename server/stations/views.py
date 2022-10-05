@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-=======
-
-from xmlrpc.client import ResponseError
->>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -21,7 +16,6 @@ class AddStation(APIView):
     if request.user.groups.all().values_list()[0][1] == 'Admin':
         response = request.data
 
-<<<<<<< HEAD
         try:
             stationId = response['station_id']
 
@@ -64,19 +58,6 @@ class AddStation(APIView):
                         }
                 )
         except:
-=======
-        x = stationModel.objects.create(
-            email = response["email"],
-            station_id = response["station_id"],
-            station_name = response["station_name"],
-            district = response["district"],
-            subdivision = response["subdivision"],
-            address = response["address"],
-            contact = response["contact"],
-            pincode = response["pincode"],
-        )
-        if (x == None):
->>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411
             return Response(
                 status=status.HTTP_405_METHOD_NOT_ALLOWED,
                 data={
@@ -119,23 +100,14 @@ class GetStationNameById(APIView):
                 }
             )
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411
 class GetAllDistrict(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-<<<<<<< HEAD
 
         try:
             district_data = stationModel.objects.values_list('district').distinct()
-=======
-        
-        try:
-            district_data = stationModel.objects.values_list('district').distinct()    
->>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411
 
             districts = []
             for i in district_data:
@@ -157,23 +129,14 @@ class GetAllDistrict(APIView):
                 }
             )
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411
 class GetAllSubdivisions(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-<<<<<<< HEAD
 
         try:
             subdivision_data = stationModel.objects.values_list('subdivision').distinct()
-=======
-        
-        try:
-            subdivision_data = stationModel.objects.values_list('subdivision').distinct()    
->>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411
 
             districts = []
             for i in subdivision_data:
@@ -194,8 +157,3 @@ class GetAllSubdivisions(APIView):
                     "message": "Unknown error"
                 }
             )
-<<<<<<< HEAD
-=======
-
-        
->>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411
