@@ -15,4 +15,10 @@ class FeedbackSerializers(serializers.ModelSerializer):
     class Meta:
         model = responseModel
         fields = ('__all__')
+<<<<<<< HEAD
         # read_only_fields = ('date_created', 'ip_address')
+=======
+        # read_only_fields = ('date_created', 'ip_address')
+
+    
+>>>>>>> 9eb0135a1809d0d9397424f0f96c94b219cb4411
