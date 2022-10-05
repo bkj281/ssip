@@ -5,6 +5,7 @@ import { VscDashboard } from 'react-icons/vsc'
 import { ImQrcode } from 'react-icons/im'
 import { AiOutlineUserAdd } from 'react-icons/ai'
 import { RiLogoutCircleLine } from 'react-icons/ri'
+import { BsFileEarmarkBarGraph } from 'react-icons/bs'
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const location = useLocation();
@@ -143,7 +144,23 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </NavLink>
               </li>
 
-              {/*  */}
+              {/* Visualization */}
+              <li style={{ padding: '0.5rem 0.75rem' }} className={`rounded-sm mb-0.5 last:mb-0 ${pathname.includes('visuals') && 'bg-slate-900'}`}>
+                <NavLink
+                  to="/dashboard/visuals"
+                  className={`text-decoration-none block text-slate-200 hover:text-white truncate transition duration-150 ${pathname.includes('visuals') && 'hover:text-slate-200'
+                    }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="grow flex items-center">
+                      <BsFileEarmarkBarGraph size={25} />
+                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                        Visualization
+                      </span>
+                    </div>
+                  </div>
+                </NavLink>
+              </li>
 
               {/* QR Generator */}
               <li style={{ padding: '0.5rem 0.75rem' }} className={`rounded-sm mb-0.5 last:mb-0 ${pathname.includes('qr-generator') && 'bg-slate-900'}`}>

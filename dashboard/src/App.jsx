@@ -18,6 +18,7 @@ import Login from './authentication/Login';
 import Dashboard from './pages/Dashboard';
 import QR from './qr-code/QR';
 import Registration from './pages/Registration';
+import Visualization from './pages/Visualizations';
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/qr-generator" element={<QR />} />
         <Route path='/dashboard/register-station' element={<Registration />} />
+        <Route path='/dashboard/visuals' element={<Visualization />} />
       </Routes>
 
       <ToastContainer
