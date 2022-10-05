@@ -16,5 +16,3 @@ class FeedbackSerializers(serializers.ModelSerializer):
         model = responseModel
         fields = ('__all__')
         # read_only_fields = ('date_created', 'ip_address')
-
-    

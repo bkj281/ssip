@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('station_id', models.CharField(max_length=10)),
                 ('station_name', models.CharField(max_length=25)),
                 ('district', models.CharField(max_length=15)),
-                ('subsubdivision', models.CharField(max_length=10)),
+                ('subdivision', models.CharField(max_length=10)),
                 ('address', models.CharField(default=' ', max_length=100)),
                 ('contact', models.CharField(max_length=12)),
                 ('pincode', models.CharField(max_length=6)),
