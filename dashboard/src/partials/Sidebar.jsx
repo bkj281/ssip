@@ -182,7 +182,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
 
               {/* Logout */}
-              <li style={{ padding: '0.5rem 0.75rem' }} className={`rounded-sm mb-0.5 last:mb-0 ${pathname.includes('register-station') && 'bg-slate-900'}`}>
+              <li style={{ padding: '0.5rem 0.75rem' }} className={`rounded-sm mb-0.5 last:mb-0 ${pathname.includes('logout') && 'bg-slate-900'}`}>
                 <div
                   className={`text-decoration-none block text-slate-200 hover:text-white truncate transition duration-150}`}
                   style={{ cursor: 'pointer' }}

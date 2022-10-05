@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Login from './authentication/Login';
 import Dashboard from './pages/Dashboard';
 import QR from './qr-code/QR';
+import Registration from './pages/Registration';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
         <Route exact path='/login' element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/qr-generator" element={<QR />} />
+        <Route path='/dashboard/register-station' element={<Registration />} />
       </Routes>
 
       <ToastContainer
