@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import './LoginPage.css';
 import Gujarat_Police_Logo from './assets/Gujarat_Police_Logo_1.png';
@@ -32,7 +32,7 @@ function HomePage() {
           alt='Gujarat Police Logo'
         />
       </div>
-      <div style={{ flex: '1', alignSelf: 'flex-start', paddingLeft: '3em', paddingRight: '3em' }}>
+      <div style={{ flex: '1', alignSelf: 'flex-start', width: '100%', marginBottom: '10px' }}>
         <h1 className='wlcm'>Enter Police Station Number:</h1>
       </div>
       <div className='div-inp-txt'>

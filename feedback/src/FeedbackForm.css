@@ -19,6 +19,7 @@
 }
 
 .fb-cmb {
+  box-sizing: border-box;
   width: 100%;
   height: 52px;
   border: 1px solid #000000;
@@ -31,10 +32,10 @@
   -moz-appearance: none;
   -webkit-appearance: none;
   padding-right: 23px;
-  background-image: url('./assets/down-arrow.png');
+  /* background-image: url('./assets/down-arrow.png');
   background-repeat: no-repeat;
   background-position: calc(100% - 20px) center;
-  background-size: 32px;
+  background-size: 32px; */
   cursor: pointer;
   margin-bottom: 55px;
 
