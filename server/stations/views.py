@@ -1,4 +1,5 @@
 
+from xmlrpc.client import ResponseError
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -35,7 +36,7 @@ class AddStation(APIView):
             station_id = response["station_id"],
             station_name = response["station_name"],
             district = response["district"],
-            division = response["division"],
+            subdivision = response["subdivision"],
             address = response["address"],
             contact = response["contact"],
             pincode = response["pincode"],
@@ -78,6 +79,62 @@ class GetStationNameById(APIView):
                 data={
                     "success": "false",
                     "message": "Station id doesn't exist"
+                }
+            )
+
+class GetAllDistrict(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        
+        try:
+            district_data = stationModel.objects.values_list('district').distinct()    
+
+            districts = []
+            for i in district_data:
+                districts.append(i[0])
+            return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "success": "true",
+                    "message": districts
+                }
+            )
+
+        except:
+            return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "success": "false",
+                    "message": "Unknown error"
+                }
+            )
+
+class GetAllSubdivisions(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        
+        try:
+            subdivision_data = stationModel.objects.values_list('subdivision').distinct()    
+
+            districts = []
+            for i in subdivision_data:
+                districts.append(i[0])
+            return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "success": "true",
+                    "message": districts
+                }
+            )
+
+        except:
+            return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "success": "false",
+                    "message": "Unknown error"
                 }
             )
 
