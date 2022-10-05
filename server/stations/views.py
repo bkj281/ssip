@@ -1,4 +1,4 @@
-from asyncio.windows_events import NULL
+
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -35,12 +35,12 @@ class AddStation(APIView):
             station_id = response["station_id"],
             station_name = response["station_name"],
             district = response["district"],
-            subdivision = response["subdivision"],
+            division = response["division"],
             address = response["address"],
             contact = response["contact"],
             pincode = response["pincode"],
         )
-        if (x == NULL):
+        if (x == None):
             return Response(
                 status=status.HTTP_406_NOT_ACCEPTABLE,
                 data={

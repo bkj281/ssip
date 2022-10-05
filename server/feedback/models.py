@@ -1,4 +1,5 @@
 
+from email.policy import default
 from django.db import models
 
 # Create your models here.
@@ -8,7 +9,7 @@ import django
 
 class responseModel(models.Model):
     res = models.ForeignKey('verification.phoneModel', on_delete=models.CASCADE)
-    station = models.ForeignKey('stations.stationModel', on_delete=models.CASCADE)
+    station_id = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     res1 = models.CharField(max_length=50, blank=False)
