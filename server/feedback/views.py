@@ -8,7 +8,7 @@ from rest_framework import status
 from .serializers import FeedbackSerializers
 from .models import responseModel
 from verification.models import phoneModel
-import pandas as pd
+
 
 class form(APIView):
     permission_classes = [AllowAny]
