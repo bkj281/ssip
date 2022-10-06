@@ -46,7 +46,7 @@ class form(APIView):
 
 
 class FilterFeedback(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     @staticmethod
     def post(request):
@@ -237,26 +237,27 @@ class FilterFeedback(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-    @staticmethod
-    def get(request):
+    def get(self, request, *args, **kwargs):
         try:
-            response = HttpResponse(content_type='text/csv')
-            writer = csv.writer(response)
+            response = HttpResponse(content_type='application/pcap')
+            response['Content-Disposition'] = 'attachment; filename="feedback.csv"'
 
-            response['Content-Diposition'] = 'attachment; filename="feedback.csv"'
-            print(response)
+            writer = csv.writer(response)
             writer.writerow(['ID', 'Station ID', 'HOW DID YOU COME TO THE POLICE STATION?', 'AFTER HOW MUCH TIME YOU WERE HEARD IN PS?', 'HOW WOULD YOU DESCRIBE YOUR EXPERIENCE WITH POLICE OFFICERS IN THE POLICE STATION?', 'RATINGS', 'created_at', 'updated_at', 'res'])
 
             for ele in serializer.data:
                 writer.writerow(list(ele.values()))
 
+            print(writer)
+            print(response)
             return response
 
         except:
             return Response(data={'message': 'Unable to access the data'}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class GetRatingCount(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         response = request.data
@@ -267,40 +268,45 @@ class GetRatingCount(APIView):
             station_id = response["station_id"]
 
             if station_id == "" and district == "" and subdivision == "":
-                q = "SELECT id, res4, COUNT(*) AS count FROM feedback_responsemodel GROUP BY res4"
+                q = "SELECT id, res4, COUNT(*) AS count FROM feedback_responsemodel GROUP BY id,res4"
                 queryset = responseModel.objects.raw(q)
                 serializer = RatingCountSerializer(queryset, many=True)
-                print(serializer.data)
                 return Response(
                     serializer.data,
                     status=status.HTTP_200_OK,
                 )
 
             if station_id != "" and district == "" and subdivision == "":
-                q = "SELECT id, res4, COUNT(*) AS count FROM feedback_responsemodel WHERE feedback_responsemodel.station_id =" + "'" + station_id +"' GROUP BY res4"
+                q = "SELECT stations_stationmodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel WHERE " \
+                    "feedback_responsemodel.station_id =" + "'" + station_id + "' GROUP BY stations_stationmodel.id," \
+                                                                               "res4 "
                 queryset = responseModel.objects.raw(q)
                 serializer = RatingCountSerializer(queryset, many=True)
-                print(serializer.data)
-                return Response(
-                    serializer.data,
-                    status=status.HTTP_200_OK,
-                )
-            
-            if station_id == "" and district != "" and subdivision == "":
-                q = "SELECT id, res4, COUNT(*) AS count FROM feedback_responsemodel WHERE feedback_responsemodel.district =" + "'" + district +"' GROUP BY res4"
-                queryset = responseModel.objects.raw(q)
-                serializer = RatingCountSerializer(queryset, many=True)
-                print(serializer.data)
                 return Response(
                     serializer.data,
                     status=status.HTTP_200_OK,
                 )
 
-            if station_id == "" and district == "" and subdivision != "":
-                q = "SELECT id, res4, COUNT(*) AS count FROM feedback_responsemodel WHERE feedback_responsemodel.subdivision =" + "'" + subdivision +"' GROUP BY res4"
+            if station_id == "" and district != "" and subdivision == "":
+                q = "SELECT stations_stationmodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel INNER JOIN " \
+                    "stations_stationmodel ON feedback_responsemodel.station_id=stations_stationmodel.station_id " \
+                    "WHERE stations_stationmodel.district =" + "'" + district + "' GROUP BY stations_stationmodel.id," \
+                                                                                "res4 "
                 queryset = responseModel.objects.raw(q)
                 serializer = RatingCountSerializer(queryset, many=True)
-                print(serializer.data)
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_200_OK,
+                )
+
+            if station_id == "" and district != "" and subdivision != "":
+                q = "SELECT DISTINCT (stations_stationmodel.id), res4, COUNT(*) AS count FROM feedback_responsemodel " \
+                    "INNER JOIN stations_stationmodel ON " \
+                    "feedback_responsemodel.station_id=stations_stationmodel.station_id WHERE " \
+                    "stations_stationmodel.subdivision =" + "'" + subdivision + "' AND " \
+                                                                                "stations_stationmodel.district="+"'"+district+"' GROUP BY res4 "
+                queryset = responseModel.objects.raw(q)
+                serializer = RatingCountSerializer(queryset, many=True)
                 return Response(
                     serializer.data,
                     status=status.HTTP_200_OK,
@@ -314,4 +320,3 @@ class GetRatingCount(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        
