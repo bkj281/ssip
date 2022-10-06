@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './LoginPage.css';
 
-function LastPage() {
+function LastPage({ setOtpid }) {
+  useEffect(() => {
+    setOtpid('');
+  }, []);
+
   return (
     <div style={{ padding: '1rem' }}>
       <h2 style={{ textAlign: 'center' }}>Citizen Service App</h2>

@@ -102,9 +102,9 @@ class GetStationNameById(APIView):
 
 
 class GetAllDistrict(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
-    def post(self, request):
+    def get(self, request):
 
         try:
             district_data = stationModel.objects.values_list('district').distinct()
@@ -131,29 +131,32 @@ class GetAllDistrict(APIView):
 
 
 class GetAllSubdivisions(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
 
-        try:
-            subdivision_data = stationModel.objects.values_list('subdivision').distinct()
+        # try:
+            district = request.data['district']
+            district_data = stationModel.objects.filter(district=district).values()
 
-            districts = []
-            for i in subdivision_data:
-                districts.append(i[0])
+            # subdivision_data = district_data.objects.values_list('subdivision').distinct()
+            sub = []
+            for i in district_data:
+                sub.append(i['subdivision'])
+
             return Response(
                 status=status.HTTP_200_OK,
                 data={
                     "success": "true",
-                    "message": districts
+                    "message": set(sub)
                 }
             )
 
-        except:
-            return Response(
-                status=status.HTTP_200_OK,
-                data={
-                    "success": "false",
-                    "message": "Unknown error"
-                }
-            )
+        # except:
+        #     return Response(
+        #         status=status.HTTP_200_OK,
+        #         data={
+        #             "success": "false",
+        #             "message": "Unknown error"
+        #         }
+        #     )
