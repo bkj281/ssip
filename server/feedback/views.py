@@ -1,4 +1,5 @@
 import csv
+from email import message
 
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
@@ -308,4 +309,22 @@ class GetRatingCount(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
+    
+class GetTotalFeedbackCount(APIView):
+    
+    def post(self, request):
+        try:
+            count = responseModel.objects.all().count()
+            return Response(
+                    count,
+                    status=status.HTTP_200_OK,
+                )
+        except:
+            return Response(
+                    message = "Unknown error",
+                    status=status.HTTP_200_OK,
+                )
+
+
+
 
