@@ -17,7 +17,7 @@ function PoliceStationRating({ pid }) {
       alert("No Police Id :(");
     }
   }, []);
-  // console.log(ratings);
+
   const getData = async () => {
     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/rating-count/`, {
       method: 'POST',
@@ -60,30 +60,30 @@ function PoliceStationRating({ pid }) {
     }
   };
 
-  const chartData = {
-    labels: ratings.labels,
-    datasets: [
-      {
-        label: 'Top Countries',
-        data: ratings.data,
-        backgroundColor: [
-          tailwindConfig().theme.colors.red[500],
-          tailwindConfig().theme.colors.orange[400],
-          tailwindConfig().theme.colors.yellow[300],
-          tailwindConfig().theme.colors.blue[600],
-          tailwindConfig().theme.colors.green[800],
-        ],
-        hoverBackgroundColor: [
-          tailwindConfig().theme.colors.red[600],
-          tailwindConfig().theme.colors.orange[500],
-          tailwindConfig().theme.colors.yellow[400],
-          tailwindConfig().theme.colors.blue[700],
-          tailwindConfig().theme.colors.green[900],
-        ],
-        hoverBorderColor: tailwindConfig().theme.colors.white,
-      },
-    ],
-  };
+  // const chartData = {
+  //   labels: ratings.labels,
+  //   datasets: [
+  //     {
+  //       label: 'Top Countries',
+  //       data: ratings.data,
+  //       backgroundColor: [
+  //         tailwindConfig().theme.colors.red[500],
+  //         tailwindConfig().theme.colors.orange[400],
+  //         tailwindConfig().theme.colors.yellow[300],
+  //         tailwindConfig().theme.colors.blue[600],
+  //         tailwindConfig().theme.colors.green[800],
+  //       ],
+  //       hoverBackgroundColor: [
+  //         tailwindConfig().theme.colors.red[600],
+  //         tailwindConfig().theme.colors.orange[500],
+  //         tailwindConfig().theme.colors.yellow[400],
+  //         tailwindConfig().theme.colors.blue[700],
+  //         tailwindConfig().theme.colors.green[900],
+  //       ],
+  //       hoverBorderColor: tailwindConfig().theme.colors.white,
+  //     },
+  //   ],
+  // };
 
   return (
     <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-sm border border-slate-200">
@@ -92,7 +92,34 @@ function PoliceStationRating({ pid }) {
       </header>
       {/* Chart built with Chart.js 3 */}
       {/* Change the height attribute to adjust the chart height */}
-      <DoughnutChart data={chartData} width={389} height={260} />
+      <DoughnutChart
+        data={{
+          labels: ratings.labels,
+          datasets: [
+            {
+              label: 'Top Countries',
+              data: ratings.data,
+              backgroundColor: [
+                tailwindConfig().theme.colors.red[500],
+                tailwindConfig().theme.colors.orange[400],
+                tailwindConfig().theme.colors.yellow[300],
+                tailwindConfig().theme.colors.blue[600],
+                tailwindConfig().theme.colors.green[800],
+              ],
+              hoverBackgroundColor: [
+                tailwindConfig().theme.colors.red[600],
+                tailwindConfig().theme.colors.orange[500],
+                tailwindConfig().theme.colors.yellow[400],
+                tailwindConfig().theme.colors.blue[700],
+                tailwindConfig().theme.colors.green[900],
+              ],
+              hoverBorderColor: tailwindConfig().theme.colors.white,
+            },
+          ],
+        }}
+        width={389}
+        height={260}
+      />
     </div>
   );
 }
