@@ -15,13 +15,45 @@ const QR = () => {
 
   const ref = createRef();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (sid === "")
       toast.error('Enter a Station ID', {
         theme: "dark"
       });
-    else
-      setWord(sid);
+    else {
+      const id = toast.loading("Generating QR Code...", {
+        theme: "dark",
+        closeOnClick: true,
+        closeButton: null
+      })
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/station/get/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          "station_id": sid,
+        }),
+      });
+      const result = await res.json();
+      console.log(result);
+      if (res.status === 200) {
+        toast.update(id, {
+          isLoading: false,
+          render: "Generated",
+          type: "success",
+          autoClose: 2000,
+        });
+        setWord(sid)
+      } else {
+        toast.update(id, {
+          render: result.message,
+          type: "warning",
+          isLoading: false,
+          autoClose: 3000
+        });
+        // toast.warning(result.message, { theme: "dark" });
+        setSid("");
+      }
+    }
   }
 
   return (
@@ -51,13 +83,13 @@ const QR = () => {
                 />
                 <br />
                 <h3 className='text-center'>Instructions</h3>
-                <h5 className='text-center'>Station ID: 007</h5>
+                <h5 className='text-center'>Station ID: {word ? word : 'Enter an ID'}</h5>
                 <ul style={{ listStyleType: 'disc' }}>
                   <li>Scan the above QR Code using Google Lens or any other QR Code Scanner.</li>
                   <li>Confirm the station &amp; Complete the authentication to fill the form.</li>
                   <li>Fill the Feedback Form.</li>
                   <li>
-                    In case you can't scan the QR Code visit the following link <span className='text-decoration-underline'>{`${import.meta.env.VITE_FEEDBACK_URL}/007`}</span> .
+                    In case you can't scan the QR Code visit the following link <span className='text-decoration-underline'>{`${import.meta.env.VITE_FEEDBACK_URL}/${word ? word : ''}`}</span> .
                   </li>
                 </ul>
               </Col>
@@ -69,7 +101,7 @@ const QR = () => {
                   <Form.Control
                     type="text"
                     value={sid}
-                    onChange={(e) => setSid(e.target.value)}
+                    onChange={(e) => setSid(e.target.value.toUpperCase())}
                     className='mx-auto w-75'
                   />
                 </Form.Group>
@@ -82,7 +114,7 @@ const QR = () => {
                   Download
                 </Button> */}
                 <Pdf targetRef={ref} filename="QRCode.pdf">
-                  {({ toPdf }) => <Button size="sm" className='mx-3 px-3' onClick={toPdf}>Download</Button>}
+                  {({ toPdf }) => <Button size="sm" className='mx-3 px-3' onClick={toPdf} disabled={word ? false : true}>Download</Button>}
                 </Pdf>
               </Col>
             </Row>
