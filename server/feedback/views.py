@@ -238,8 +238,9 @@ class FilterFeedback(APIView):
             )
 
     def get(self, request, *args, **kwargs):
+
         try:
-            response = HttpResponse(content_type='application/pcap')
+            response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="feedback.csv"'
 
             writer = csv.writer(response)
@@ -264,11 +265,12 @@ class GetRatingCount(APIView):
 
         try:
             district = response["district"]
-            subdivision = response["subdivision"]
             station_id = response["station_id"]
 
-            if station_id == "" and district == "" and subdivision == "":
-                q = "SELECT feedback_responsemodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel GROUP BY feedback_responsemodel.id,res4"
+            if station_id == "" and district == "":
+                q = "SELECT stations_stationmodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel INNER JOIN stations_stationmodel ON feedback_responsemodel.station_id = stations_stationmodel.station_id " \
+                    "GROUP BY stations_stationmodel.station_id,stations_stationmodel.id," \
+                                                                               "res4"
                 queryset = responseModel.objects.raw(q)
                 serializer = RatingCountSerializer(queryset, many=True)
                 return Response(
@@ -276,10 +278,10 @@ class GetRatingCount(APIView):
                     status=status.HTTP_200_OK,
                 )
 
-            if station_id != "" and district == "" and subdivision == "":
-                q = "SELECT feedback_responsemodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel WHERE " \
-                    "feedback_responsemodel.station_id =" + "'" + station_id + "' GROUP BY feedback_responsemodel.id," \
-                                                                               "res4 "
+            if station_id != "" and district == "":
+                q = "SELECT stations_stationmodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel INNER JOIN stations_stationmodel ON feedback_responsemodel.station_id = stations_stationmodel.station_id WHERE " \
+                    "feedback_responsemodel.station_id =" + "'" + station_id + "' GROUP BY stations_stationmodel.station_id,stations_stationmodel.id," \
+                                                                               "res4"
                 queryset = responseModel.objects.raw(q)
                 serializer = RatingCountSerializer(queryset, many=True)
                 return Response(
@@ -287,24 +289,11 @@ class GetRatingCount(APIView):
                     status=status.HTTP_200_OK,
                 )
 
-            if station_id == "" and district != "" and subdivision == "":
+            if station_id == "" and district != "":
                 q = "SELECT stations_stationmodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel INNER JOIN " \
                     "stations_stationmodel ON feedback_responsemodel.station_id=stations_stationmodel.station_id " \
                     "WHERE stations_stationmodel.district =" + "'" + district + "' GROUP BY stations_stationmodel.id," \
                                                                                 "res4 "
-                queryset = responseModel.objects.raw(q)
-                serializer = RatingCountSerializer(queryset, many=True)
-                return Response(
-                    serializer.data,
-                    status=status.HTTP_200_OK,
-                )
-
-            if station_id == "" and district != "" and subdivision != "":
-                q = "SELECT DISTINCT (stations_stationmodel.id), res4, COUNT(*) AS count FROM feedback_responsemodel " \
-                    "INNER JOIN stations_stationmodel ON " \
-                    "feedback_responsemodel.station_id=stations_stationmodel.station_id WHERE " \
-                    "stations_stationmodel.subdivision =" + "'" + subdivision + "' AND " \
-                                                                                "stations_stationmodel.district="+"'"+district+"' GROUP BY res4 "
                 queryset = responseModel.objects.raw(q)
                 serializer = RatingCountSerializer(queryset, many=True)
                 return Response(
