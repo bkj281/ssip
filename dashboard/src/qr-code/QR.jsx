@@ -101,7 +101,7 @@ const QR = () => {
                   <Form.Control
                     type="text"
                     value={sid}
-                    onChange={(e) => setSid(e.target.value)}
+                    onChange={(e) => setSid(e.target.value.toUpperCase())}
                     className='mx-auto w-75'
                   />
                 </Form.Group>
