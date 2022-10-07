@@ -8,8 +8,6 @@ import {
 import './css/style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import './charts/ChartjsConfig';
-
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
