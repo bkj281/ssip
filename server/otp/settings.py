@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'stations',
     'corsheaders',
     'rest_framework_simplejwt',
-    
 ]
 
 REST_FRAMEWORK = {
@@ -50,10 +49,7 @@ REST_FRAMEWORK = {
         'anon': '500/minute',
         'user': '1000/minute',
         'loginAttempts': '3/hr',
-
-    },
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100,
+    }
 }
 
 SIMPLE_JWT = {

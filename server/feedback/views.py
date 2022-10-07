@@ -3,6 +3,7 @@ import csv
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import Count
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.encoding import smart_bytes
@@ -53,7 +54,7 @@ class form(APIView):
 
 
 class FilterFeedback(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     @staticmethod
     def post(request):
@@ -250,13 +251,11 @@ class FilterFeedback(APIView):
             response['Content-Disposition'] = 'attachment; filename="feedback.csv"'
 
             writer = csv.writer(response)
-            writer.writerow(['ID', 'Station ID', 'HOW DID YOU COME TO THE POLICE STATION?', 'AFTER HOW MUCH TIME YOU WERE HEARD IN PS?', 'HOW WOULD YOU DESCRIBE YOUR EXPERIENCE WITH POLICE OFFICERS IN THE POLICE STATION?', 'RATINGS', 'created_at', 'updated_at', 'res'])
+            writer.writerow(['Station ID', 'HOW DID YOU COME TO THE POLICE STATION?', 'AFTER HOW MUCH TIME YOU WERE HEARD IN PS?', 'HOW WOULD YOU DESCRIBE YOUR EXPERIENCE WITH POLICE OFFICERS IN THE POLICE STATION?', 'RATINGS', 'created_at'])
 
             for ele in serializer.data:
-                writer.writerow(list(ele.values()))
+                writer.writerow(list(ele.values())[1:-2])
 
-            print(writer)
-            print(response)
             return response
 
         except:
@@ -322,6 +321,7 @@ class GetTotalCountDistrictSubdivision(APIView):
             q = "SELECT stations_stationmodel.id, COUNT(*) AS count FROM feedback_responsemodel INNER JOIN stations_stationmodel ON feedback_responsemodel.station_id = stations_stationmodel.station_id WHERE " \
                 "stations_stationmodel.district =" + "'" + district + "' GROUP BY stations_stationmodel.subdivision,stations_stationmodel.id"
             queryset = stationModel.objects.raw(q)
+
             serializer = SubdivisionCountSerializer(queryset, many=True)
             return Response(
                 serializer.data,
@@ -330,4 +330,13 @@ class GetTotalCountDistrictSubdivision(APIView):
         else:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST
+            )
+
+class GetCountForEachRating(APIView):
+    def post(self, request):
+        data = responseModel.objects.all().values("res4").annotate(total=Count('res4'))
+        lst = list(data)
+        return Response(
+            data=lst,
+                status=status.HTTP_200_OK
             )
