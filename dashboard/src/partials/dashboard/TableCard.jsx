@@ -37,7 +37,17 @@ function TableCard({ data }) {
             {/* Table body */}
             <tbody className="text-sm font-medium divide-y divide-slate-100">
               {/* Row */}
-              {data.map((d, id) => (
+              {data.length === 0 ? <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  <div className='p-2 text-center text-red-700 text-bold'>
+                    Data doesn't exist
+                  </div>
+                </td>
+              </tr> : data.map((d, id) => (
                 <tr key={id}>
                   <td className='p-2'>
                     <div className="flex items-center">
