@@ -1,5 +1,4 @@
 import csv
-from email import message
 
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -13,6 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
 from stations.models import stationModel
 from .serializers import FeedbackSerializers, RatingCountSerializer, SubdivisionCountSerializer
 from .models import responseModel
@@ -69,259 +69,353 @@ class FilterFeedback(APIView):
             page = (int(response["pg"]) - 1) * 10
 
             if station_id != "" and rating == "" and district == "" and subdivision == "":
-
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
-                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
 
-                count = responseModel.objects.all().count()
-                
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + f"' ORDER BY f.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if station_id != "" and rating != "" and district == "" and subdivision == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
-                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.res4=" + "'" + rating + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.res4=" + "'" + rating + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.res4=" + "'" + rating + f"' ORDER BY f.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if station_id != "" and rating == "" and district != "" and subdivision == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.district=" + "'" + \
-                    district + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    district + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.district=" + "'" + \
+                    district + f"' ORDER BY f.created_at DESC"
+                queryset = responseModel.objects.raw(q) 
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if station_id != "" and rating == "" and district == "" and subdivision != "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.subdivision=" + "'" + \
-                    subdivision + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    subdivision + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.subdivision=" + "'" + \
+                    subdivision + f"' ORDER BY f.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if station_id != "" and rating != "" and district == "" and subdivision != "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.res4=" + "'" + \
-                    rating + "' AND f.subdivision=" + "'" + subdivision + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    rating + "' AND f.subdivision=" + "'" + subdivision + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.res4=" + "'" + \
+                    rating + "' AND f.subdivision=" + "'" + subdivision + f"' ORDER BY f.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if station_id != "" and rating != "" and district != "" and subdivision == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.res4=" + "'" + \
-                    rating + "' AND f.district=" + "'" + district + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    rating + "' AND f.district=" + "'" + district + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.res4=" + "'" + \
+                    rating + "' AND f.district=" + "'" + district + f"' ORDER BY f.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if station_id != "" and rating == "" and district != "" and subdivision == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.district=" + "'" + \
-                    district + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    district + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.district=" + "'" + \
+                    district + f"' ORDER BY f.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if station_id != "" and rating == "" and district != "" and subdivision != "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.station_id=" + "'" + station_id + "' AND f.district=" + "'" + \
-                    district + "' AND f.subdivision=" + "'" + subdivision + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    district + "' AND f.subdivision=" + "'" + subdivision + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = f"SELECT * FROM feedback_responsemodel ORDER BY feedback_responsemodel.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if district == "" and subdivision == "" and rating == "" and station_id == "":
-                q = "SELECT * FROM feedback_responsemodel ORDER BY feedback_responsemodel.created_at DESC LIMIT '" + str(page) + "', 10"
+                q = f"SELECT * FROM feedback_responsemodel ORDER BY feedback_responsemodel.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = f"SELECT * FROM feedback_responsemodel ORDER BY feedback_responsemodel.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if district != "" and subdivision == "" and rating == "" and station_id == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
-                    "f.station_id=s.station_id WHERE s.district=" + "'" + district + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    "f.station_id=s.station_id WHERE s.district=" + "'" + district + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q2 = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.district=" + "'" + district + f"' ORDER BY f.created_at DESC"
+
+                queryset = responseModel.objects.raw(q2)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if district == "" and subdivision != "" and rating == "" and station_id == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
-                    "f.station_id=s.station_id WHERE s.subdivision=" + "'" + subdivision + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    "f.station_id=s.station_id WHERE s.subdivision=" + "'" + subdivision + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.subdivision=" + "'" + subdivision + f"' ORDER BY f.created_at"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if district == "" and subdivision == "" and rating != "" and station_id == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
-                    "f.station_id=s.station_id WHERE f.res4=" + "'" + rating + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    "f.station_id=s.station_id WHERE f.res4=" + "'" + rating + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE f.res4=" + "'" + rating + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if district != "" and subdivision != "" and rating == "" and station_id == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.district=" + "'" + district + "' AND s.subdivision=" + "'" + \
-                    subdivision + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    subdivision + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.district=" + "'" + district + "' AND s.subdivision=" + "'" + \
+                    subdivision + f"' ORDER BY f.created_at"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if district != "" and subdivision == "" and rating != "" and station_id == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.district=" + "'" + district + "' AND f.res4=" + "'" + rating + \
-                    "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.district=" + "'" + district + "' AND f.res4=" + "'" + rating + \
+                    f"' ORDER BY f.created_at"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if district == "" and subdivision != "" and rating != "" and station_id == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.subdivision=" + "'" + subdivision + "' AND f.res4=" + "'" + \
-                    rating + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    rating + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.subdivision=" + "'" + subdivision + "' AND f.res4=" + "'" + \
+                    rating + f"' ORDER BY f.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
             if district != "" and subdivision != "" and rating != "" and station_id == "":
                 q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
                     "f.station_id=s.station_id WHERE s.subdivision=" + "'" + subdivision + "' AND f.res4=" + "'" + \
-                    rating + "' AND s.district=" + "'" + district + "' ORDER BY f.created_at DESC LIMIT '" + str(page) + "', 10"
+                    rating + "' AND s.district=" + "'" + district + f"' ORDER BY f.created_at DESC LIMIT '10' OFFSET '{page}'"
                 queryset = responseModel.objects.raw(q)
                 serializer = FeedbackSerializers(queryset, many=True)
-                count = responseModel.objects.all().count()
+
+                q = "SELECT f.* FROM feedback_responsemodel f INNER JOIN stations_stationmodel s ON " \
+                    "f.station_id=s.station_id WHERE s.subdivision=" + "'" + subdivision + "' AND f.res4=" + "'" + \
+                    rating + "' AND s.district=" + "'" + district + f"' ORDER BY f.created_at DESC"
+                queryset = responseModel.objects.raw(q)
+                serializer1 = FeedbackSerializers(queryset, many=True)
+                count = len(serializer1.data)
 
                 return Response(
-                    data = {
+                    data={
                         "count": count,
                         "data": serializer.data
-                        },
+                    },
                     status=status.HTTP_200_OK,
                 )
 
         except MultiValueDictKeyError as e:
-            print()
             return Response(
                 data={
                     'message': f'{e} is not provided'
@@ -417,7 +511,7 @@ class GetTotalCountDistrictSubdivision(APIView):
             )
 
 class GetCountForEachRating(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         data = responseModel.objects.all().order_by('res4').values("res4").annotate(total=Count('res4'))
         lst = list(data)

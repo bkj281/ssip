@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-from .models import stationModel
+from .models import stationModel, ControlroomModel
 from .StationSerialzer import StationSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -107,7 +107,7 @@ class GetAllDistrict(APIView):
     def get(self, request):
 
         try:
-            district_data = stationModel.objects.values_list('district').distinct()
+            district_data = ControlroomModel.objects.order_by('district').values_list('district').distinct()
 
             districts = []
             for i in district_data:
