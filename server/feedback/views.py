@@ -1,13 +1,19 @@
 import csv
-from email import message
 
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
+from django.utils.encoding import smart_bytes
+from django.utils.http import urlsafe_base64_encode
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import FeedbackSerializers, RatingCountSerializer
+
+from stations.models import stationModel
+from .serializers import FeedbackSerializers, RatingCountSerializer, SubdivisionCountSerializer
 from .models import responseModel
 from verification.models import phoneModel
 
@@ -27,7 +33,7 @@ class form(APIView):
                 verify = phoneModel.objects.filter(mobile=mob[1], is_verified=True).values_list()[0]
                 serializer.save()
                 mydata = phoneModel.objects.get(mobile=mob[1])
-                mydata.is_verified = False
+                # mydata.is_verified = False
                 mydata.save()
                 return Response(data={"message": serializer.data}, status=status.HTTP_200_OK)
             except IndexError:
@@ -47,7 +53,7 @@ class form(APIView):
 
 
 class FilterFeedback(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     @staticmethod
     def post(request):
@@ -239,9 +245,8 @@ class FilterFeedback(APIView):
             )
 
     def get(self, request, *args, **kwargs):
-
         try:
-            response = HttpResponse(content_type='text/csv')
+            response = HttpResponse(content_type='application/pcap')
             response['Content-Disposition'] = 'attachment; filename="feedback.csv"'
 
             writer = csv.writer(response)
@@ -259,27 +264,15 @@ class FilterFeedback(APIView):
 
 
 class GetRatingCount(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         response = request.data
 
         try:
-            district = response["district"]
             station_id = response["station_id"]
 
-            if station_id == "" and district == "":
-                q = "SELECT stations_stationmodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel INNER JOIN stations_stationmodel ON feedback_responsemodel.station_id = stations_stationmodel.station_id " \
-                    "GROUP BY stations_stationmodel.station_id,stations_stationmodel.id," \
-                                                                               "res4"
-                queryset = responseModel.objects.raw(q)
-                serializer = RatingCountSerializer(queryset, many=True)
-                return Response(
-                    serializer.data,
-                    status=status.HTTP_200_OK,
-                )
-
-            if station_id != "" and district == "":
+            if station_id != "":
                 q = "SELECT stations_stationmodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel INNER JOIN stations_stationmodel ON feedback_responsemodel.station_id = stations_stationmodel.station_id WHERE " \
                     "feedback_responsemodel.station_id =" + "'" + station_id + "' GROUP BY stations_stationmodel.station_id,stations_stationmodel.id," \
                                                                                "res4"
@@ -290,18 +283,10 @@ class GetRatingCount(APIView):
                     status=status.HTTP_200_OK,
                 )
 
-            if station_id == "" and district != "":
-                q = "SELECT stations_stationmodel.id, res4, COUNT(*) AS count FROM feedback_responsemodel INNER JOIN " \
-                    "stations_stationmodel ON feedback_responsemodel.station_id=stations_stationmodel.station_id " \
-                    "WHERE stations_stationmodel.district =" + "'" + district + "' GROUP BY stations_stationmodel.id," \
-                                                                                "res4 "
-                queryset = responseModel.objects.raw(q)
-                serializer = RatingCountSerializer(queryset, many=True)
+            else:
                 return Response(
-                    serializer.data,
-                    status=status.HTTP_200_OK,
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
-
         except KeyError as e:
             return Response(
                 data={
@@ -309,22 +294,40 @@ class GetRatingCount(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
-    
+
+
 class GetTotalFeedbackCount(APIView):
-    
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         try:
             count = responseModel.objects.all().count()
             return Response(
-                    count,
-                    status=status.HTTP_200_OK,
-                )
+                count,
+                status=status.HTTP_200_OK,
+            )
         except:
             return Response(
-                    message = "Unknown error",
-                    status=status.HTTP_200_OK,
-                )
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
+class GetTotalCountDistrictSubdivision(APIView):
+    permission_classes = [AllowAny]
 
+    def post(self, request):
+        response = request.data
+        district = response['district']
 
+        if district != "":
+            q = "SELECT stations_stationmodel.id, COUNT(*) AS count FROM feedback_responsemodel INNER JOIN stations_stationmodel ON feedback_responsemodel.station_id = stations_stationmodel.station_id WHERE " \
+                "stations_stationmodel.district =" + "'" + district + "' GROUP BY stations_stationmodel.subdivision,stations_stationmodel.id"
+            queryset = stationModel.objects.raw(q)
+            serializer = SubdivisionCountSerializer(queryset, many=True)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+        else:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST
+            )
