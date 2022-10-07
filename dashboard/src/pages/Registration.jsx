@@ -19,8 +19,6 @@ const Registration = () => {
     subdivision: ""
   })
 
-  const [flag, setFlag] = useState(true);
-
   const [districts, setDistricts] = useState([]);
   const [subdivisions, setSubdivisions] = useState([]);
 
@@ -150,7 +148,7 @@ const Registration = () => {
           <Container className='mt-3'>
             <Row>
               <Col>
-                <h1 className="text-decoration-underline text-center">Register New Station</h1>
+                <h1 className="text-center">Register New Station</h1>
                 <Form onSubmit={handleSubmit} className='p-5'>
                   <Row className='mb-3'>
                     <Form.Group as={Col}>
@@ -241,16 +239,16 @@ const Registration = () => {
 
                     <Form.Group as={Col}>
                       <Form.Label>District</Form.Label>
-                      <Form.Select name="district" value={data.district} onChange={handleChange} required>
-                        <option value="" selected disabled>Select District</option>
+                      <Form.Select name="district" value={data.district} defaultValue="" onChange={handleChange} required>
+                        <option value="" disabled>Select District</option>
                         {districts.map((d, id) => <option key={id} value={d}>{d}</option>)}
                       </Form.Select>
                     </Form.Group>
 
                     <Form.Group as={Col}>
                       <Form.Label>Sub Division</Form.Label>
-                      <Form.Select name="subdivision" value={data.subdivision} onChange={handleChange} required>
-                        <option value="" selected disabled>Select SubDivision</option>
+                      <Form.Select name="subdivision" value={data.subdivision} defaultValue="" onChange={handleChange} required>
+                        <option value="" disabled>Select SubDivision</option>
                         {subdivisions.map((d, id) => <option key={id} value={d}>{d}</option>)}
                       </Form.Select>
                     </Form.Group>
