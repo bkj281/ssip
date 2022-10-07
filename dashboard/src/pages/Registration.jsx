@@ -239,7 +239,7 @@ const Registration = () => {
 
                     <Form.Group as={Col}>
                       <Form.Label>District</Form.Label>
-                      <Form.Select name="district" value={data.district} defaultValue="" onChange={handleChange} required>
+                      <Form.Select name="district" value={data.district} onChange={handleChange} required>
                         <option value="" disabled>Select District</option>
                         {districts.map((d, id) => <option key={id} value={d}>{d}</option>)}
                       </Form.Select>
@@ -247,7 +247,7 @@ const Registration = () => {
 
                     <Form.Group as={Col}>
                       <Form.Label>Sub Division</Form.Label>
-                      <Form.Select name="subdivision" value={data.subdivision} defaultValue="" onChange={handleChange} required>
+                      <Form.Select name="subdivision" value={data.subdivision} onChange={handleChange} required>
                         <option value="" disabled>Select SubDivision</option>
                         {subdivisions.map((d, id) => <option key={id} value={d}>{d}</option>)}
                       </Form.Select>
