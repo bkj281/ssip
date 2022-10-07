@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'stations',
     'corsheaders',
     'rest_framework_simplejwt',
-    
+    'rest_captcha'
 ]
 
 REST_FRAMEWORK = {
@@ -180,8 +180,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT=587
-# EMAIL_HOST_USER = config('HOST')
-# EMAIL_HOST_PASSWORD = config('PASSWORD')
+EMAIL_HOST_USER = config('HOST')
+EMAIL_HOST_PASSWORD = config('PASSWORD')
 
 
 STATIC_URL = '/static/'
