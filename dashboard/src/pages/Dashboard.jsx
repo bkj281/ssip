@@ -4,6 +4,7 @@ import Header from '../partials/Header';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
 import TableCard from '../partials/dashboard/TableCard';
 import { toast } from 'react-toastify';
+import { Col, Form, Row } from 'react-bootstrap'
 
 
 const Dashboard = () => {
@@ -16,6 +17,7 @@ const Dashboard = () => {
   const [subdiv, setSub] = useState([])
   const [rating, setRating] = useState("")
   const [station_id, setStationID] = useState("")
+  const [global, setGlobal] = useState([]);
 
   useEffect(() => {
     if (localStorage.getItem("access") === null || localStorage.getItem('access') === undefined) {
@@ -27,6 +29,13 @@ const Dashboard = () => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem("access")}`
     };
+
+    const id = toast.loading("Fetching Data...", {
+      theme: "dark",
+      closeOnClick: true,
+      closeButton: null,
+      toastId: "duplicate"
+    });
 
     (async () => {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/filter/`, {
@@ -42,8 +51,50 @@ const Dashboard = () => {
       const result = await res.json();
       // console.log(result);
       setFeedbacks(result)
+      setGlobal(result);
+      const res2 = await fetch(`${import.meta.env.VITE_BASE_URL}/station/districts/get`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      const result2 = await res2.json();
+      // console.log(result);
+      if (result2.message.length >= 0)
+        setDi(result2.message);
+      toast.update(id, {
+        isLoading: false,
+        render: "Fetched",
+        type: "success",
+        autoClose: 1000,
+        toastId: id
+      });
     })();
   }, []);
+
+  const handleChange = async (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setDistrict(value);
+    if (name === "district") {
+      // console.log(value);
+      (async () => {
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/station/sub-division/get`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            district: value
+          })
+        });
+        const result = await res.json();
+        // console.log(result);
+        if (result.message.length > 0)
+          setSub(result.message);
+      })();
+    }
+  }
 
   const downloadData = async () => {
     // const headers = {
@@ -74,6 +125,100 @@ const Dashboard = () => {
 
   }
 
+  const handleReset = (e) => {
+    e.preventDefault();
+    setFeedbacks(global)
+    setSub([]);
+    setSubdivision("");
+    setDistrict("");
+    setRating("");
+    setStationID("")
+  }
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    if (localStorage.getItem("access") === null || localStorage.getItem('access') === undefined) {
+      toast.info('Session Expired!\nLogin First!!', { theme: "dark" })
+      return navigate('/login');
+    }
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("access")}`
+    };
+
+    const id = toast.loading("Fetching Data...", {
+      theme: "dark",
+      closeOnClick: true,
+      closeButton: null,
+      toastId: "duplicate"
+    });
+
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/filter/`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        district,
+        subdivision,
+        rating,
+        station_id: ""
+      })
+    });
+
+    const result = await res.json();
+    setFeedbacks(result);
+    toast.update(id, {
+      isLoading: false,
+      render: "Fetched",
+      type: "success",
+      autoClose: 1000,
+      toastId: id
+    });
+  }
+
+  const handleSearchById = async (e) => {
+    e.preventDefault();
+
+    if (localStorage.getItem("access") === null || localStorage.getItem('access') === undefined) {
+      toast.info('Session Expired!\nLogin First!!', { theme: "dark" })
+      return navigate('/login');
+    }
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("access")}`
+    };
+
+    const id = toast.loading("Fetching Data...", {
+      theme: "dark",
+      closeOnClick: true,
+      closeButton: null,
+      toastId: 'duplicate'
+    });
+
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/filter/`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        district: "",
+        subdivision: "",
+        rating: "",
+        station_id
+      })
+    });
+
+    const result = await res.json();
+    setFeedbacks(result);
+    toast.update(id, {
+      isLoading: false,
+      render: "Fetched",
+      type: "success",
+      autoClose: 1000,
+      toastId: id
+    });
+  }
+
   return (
 
     <div className="flex h-screen overflow-hidden">
@@ -92,19 +237,64 @@ const Dashboard = () => {
             <WelcomeBanner />
 
             {/* Dashboard actions */}
-            <div className="sm:flex sm:justify-between sm:items-center mb-8">
+            <div className="mb-8">
 
-              <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
+              <div className="">
+                <Form>
+                  <Row className="mb-3">
+                    <Form.Group className="mb-3" as={Col} xs={6} md={3}>
+                      <Form.Label>District</Form.Label>
+                      <Form.Select name="district" value={district} onChange={handleChange}>
+                        <option value="" disabled>Select District</option>
+                        {dis.map((d, id) => <option key={id} value={d}>{d}</option>)}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" as={Col} xs={6} md={3}>
+                      <Form.Label>Sub Division</Form.Label>
+                      <Form.Select name="subdivision" value={subdivision} onChange={(e) => setSubdivision(e.target.value)}>
+                        <option value="" disabled>Select SubDivision</option>
+                        {subdiv.map((d, id) => <option key={id} value={d}>{d}</option>)}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" as={Col} xs={6} md={3}>
+                      <Form.Label>Ratings</Form.Label>
+                      <Form.Select name="rating" value={rating} onChange={(e) => setRating(e.target.value)}>
+                        <option value="" disabled>Select Rating</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" as={Col} xs={6} md={3}>
+                      <Form.Label>Station ID</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={station_id}
+                        onChange={(e) => setStationID(e.target.value.toUpperCase())}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row>
+                    <Form.Group as={Col} xs={12} md={9}>
+                      <button className="bg-red-600 mb-2 hover:bg-red-700 text-white font-bold py-1 px-3 mx-2 rounded" onClick={handleReset}>Reset</button>
+                      <button className="bg-emerald-500 mb-2 hover:bg-emerald-600 text-white font-bold py-1 px-3 mx-2 rounded" onClick={handleSearch}>Search without Station ID</button>
+                      <button className="bg-blue-500 mb-2 hover:bg-blue-600 text-white font-bold py-1 px-3 mx-2 rounded" onClick={handleSearchById}>Search using Station ID</button>
+                    </Form.Group>
 
+                    <Col className=''>
+                      <button
+                        className="bg-gray-300  hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center float-md-end"
+                        onClick={downloadData}
+                      >
+                        <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" /></svg>
+                        <span>Download</span>
+                      </button>
+                    </Col>
+                  </Row>
+                </Form>
               </div>
-
-              <button
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
-                onClick={downloadData}
-              >
-                <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" /></svg>
-                <span>Download</span>
-              </button>
 
             </div>
 
