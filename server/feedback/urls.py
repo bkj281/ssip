@@ -1,4 +1,4 @@
-from .views import FilterFeedback, form, GetRatingCount, GetTotalCountDistrictSubdivision, GetTotalFeedbackCount, GetCountForEachRating
+from .views import FilterFeedback, GetCountForEachRating, form, GetRatingCount, GetTotalCountDistrictSubdivision, GetTotalFeedbackCount
 from django.urls import path
 
 urlpatterns = [
