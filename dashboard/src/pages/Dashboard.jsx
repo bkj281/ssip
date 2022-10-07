@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [district, setDistrict] = useState("")
   const [subdivision, setSubdivision] = useState("")
   const [subdiv, setSub] = useState([])
-  const [rating, setRating] = useState("3")
+  const [rating, setRating] = useState("")
   const [station_id, setStationID] = useState("")
 
   useEffect(() => {
@@ -46,21 +46,32 @@ const Dashboard = () => {
   }, []);
 
   const downloadData = async () => {
-    try {
-      const headers = {
-        'Content-Type': 'text/csv',
-        'Authorization': `Bearer ${localStorage.getItem("access")}`
-      };
+    // const headers = {
+    //   'Content-Type': 'text/csv',
+    //   'Authorization': `Bearer ${localStorage.getItem("access")}`
+    // };
 
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/filter/`, {
-        method: 'GET',
-        headers
-      });
-      console.log(res);
-    } catch (error) {
-      toast.error('Download Failed!', { theme: "dark" })
-      console.log(error);
-    }
+    // const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/data/`, {
+    //   method: 'GET',
+    //   headers
+    // });
+
+    // console.log(res);
+    // let result = await res.blob()
+    // console.log(result);
+
+    window.open(`${import.meta.env.VITE_BASE_URL}/feedback/filter/`, "_blank");
+
+    // fetch(`${import.meta.env.VITE_BASE_URL}/feedback/filter/`, { headers })
+    //   .then((response) => response.blob())
+    //   .then((blob) => {
+    //     let _url = window.URL.createObjectURL(blob);
+    //     window.open(_url.slice(5), "_blank").focus(); // window.open + focus
+    //   }).catch((err) => {
+    //     toast.error('Download Failed!', { theme: "dark" })
+    //     console.log(err);
+    //   });
+
   }
 
   return (
