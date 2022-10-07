@@ -34,7 +34,7 @@ class form(APIView):
                 verify = phoneModel.objects.filter(mobile=mob[1], is_verified=True).values_list()[0]
                 serializer.save()
                 mydata = phoneModel.objects.get(mobile=mob[1])
-                # mydata.is_verified = False
+                mydata.is_verified = False
                 mydata.save()
                 return Response(data={"message": serializer.data}, status=status.HTTP_200_OK)
             except IndexError:
@@ -333,8 +333,9 @@ class GetTotalCountDistrictSubdivision(APIView):
             )
 
 class GetCountForEachRating(APIView):
-    def post(self, request):
-        data = responseModel.objects.all().values("res4").annotate(total=Count('res4'))
+    permission_classes = [AllowAny]
+    def get(self, request):
+        data = responseModel.objects.all().order_by('res4').values("res4").annotate(total=Count('res4'))
         lst = list(data)
         return Response(
             data=lst,
