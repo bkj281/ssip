@@ -4,7 +4,7 @@ import Header from '../partials/Header';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
 import TableCard from '../partials/dashboard/TableCard';
 import { toast } from 'react-toastify';
-import { Col, Form, Row } from 'react-bootstrap'
+import { Col, Form, Pagination, Row } from 'react-bootstrap'
 
 
 const Dashboard = () => {
@@ -18,8 +18,27 @@ const Dashboard = () => {
   const [rating, setRating] = useState("")
   const [station_id, setStationID] = useState("")
   const [global, setGlobal] = useState([]);
+  const [total, setTotal] = useState("")
+  const [pg, setPg] = useState(1)
 
   useEffect(() => {
+    (async () => {
+      const res2 = await fetch(`${import.meta.env.VITE_BASE_URL}/station/districts/get`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      const result2 = await res2.json();
+      // console.log(result);
+      if (result2.message.length >= 0)
+        setDi(result2.message);
+
+    })();
+    fetchData(1);
+  }, []);
+
+  const fetchData = async (pg) => {
     if (localStorage.getItem("access") === null || localStorage.getItem('access') === undefined) {
       toast.info('Session Expired!\nLogin First!!', { theme: "dark" })
       return navigate('/login');
@@ -37,40 +56,30 @@ const Dashboard = () => {
       toastId: "duplicate"
     });
 
-    (async () => {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/filter/`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          district,
-          subdivision,
-          rating,
-          station_id
-        })
-      });
-      const result = await res.json();
-      // console.log(result);
-      setFeedbacks(result)
-      setGlobal(result);
-      const res2 = await fetch(`${import.meta.env.VITE_BASE_URL}/station/districts/get`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      const result2 = await res2.json();
-      // console.log(result);
-      if (result2.message.length >= 0)
-        setDi(result2.message);
-      toast.update(id, {
-        isLoading: false,
-        render: "Fetched",
-        type: "success",
-        autoClose: 1000,
-        toastId: id
-      });
-    })();
-  }, []);
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/filter/`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        district,
+        subdivision,
+        rating,
+        station_id,
+        pg
+      })
+    });
+    const result = await res.json();
+    // console.log(result);
+    setFeedbacks(result.data)
+    setGlobal(result.data);
+    setTotal(result.count)
+    toast.update(id, {
+      isLoading: false,
+      render: "Fetched",
+      type: "success",
+      autoClose: 1000,
+      toastId: id
+    });
+  }
 
   const handleChange = async (e) => {
     const name = e.target.name;
@@ -162,12 +171,14 @@ const Dashboard = () => {
         district,
         subdivision,
         rating,
-        station_id: ""
+        station_id: "",
+        pg
       })
     });
 
     const result = await res.json();
-    setFeedbacks(result);
+    setFeedbacks(result.data);
+    setTotal(result.count)
     toast.update(id, {
       isLoading: false,
       render: "Fetched",
@@ -204,12 +215,14 @@ const Dashboard = () => {
         district: "",
         subdivision: "",
         rating: "",
-        station_id
+        station_id,
+        pg
       })
     });
 
     const result = await res.json();
-    setFeedbacks(result);
+    setFeedbacks(result.data);
+    setTotal(result.count)
     toast.update(id, {
       isLoading: false,
       render: "Fetched",
@@ -217,6 +230,17 @@ const Dashboard = () => {
       autoClose: 1000,
       toastId: id
     });
+  }
+
+  let items = [];
+  for (let number = 1; number <= Math.ceil(total / 10); number++) {
+    items.push(
+      <Pagination.Item key={number} active={number === pg} onClick={() => {
+        setPg(number); fetchData(number);
+      }}>
+        {number}
+      </Pagination.Item>,
+    );
   }
 
   return (
@@ -301,6 +325,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-12 gap-6">
               {/* Table (Top Channels) */}
               <TableCard data={feedbacks} />
+              <Pagination className='col-span-full mx-auto' size="sm">{items}</Pagination>
             </div>
           </div>
         </main>
