@@ -8,7 +8,7 @@ ChartJS.register(
   BarElement
 )
 
-const BarChart = () => {
+const BarChart = ({ district }) => {
 
   const [sub, setSub] = useState([]);
   const [count, setCount] = useState([])
@@ -21,7 +21,7 @@ const BarChart = () => {
           "Content-Type": "application/json",
           'Authorization': `Bearer ${localStorage.getItem("access")}`,
         },
-        body: JSON.stringify({ district: 'Ahmedabad', station_id: "" }),
+        body: JSON.stringify({ district, station_id: "" }),
       });
       const result = await res.json();
       console.log(result);
