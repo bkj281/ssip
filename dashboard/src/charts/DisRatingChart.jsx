@@ -87,7 +87,7 @@ const DisRatingChart = ({ districts }) => {
       x: {
         title: {
           display: true,
-          text: 'districts',
+          text: 'Districts',
         },
       },
     }
