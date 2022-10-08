@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [global, setGlobal] = useState([]);
   const [total, setTotal] = useState("")
   const [pg, setPg] = useState(1)
+  const [ini, setIni] = useState("")
 
   useEffect(() => {
     (async () => {
@@ -72,6 +73,7 @@ const Dashboard = () => {
     setFeedbacks(result.data)
     setGlobal(result.data);
     setTotal(result.count)
+    setIni(result.count)
     toast.update(id, {
       isLoading: false,
       render: "Fetched",
@@ -142,6 +144,7 @@ const Dashboard = () => {
     setDistrict("");
     setRating("");
     setStationID("")
+    setTotal(ini)
   }
 
   const handleSearch = async (e) => {
