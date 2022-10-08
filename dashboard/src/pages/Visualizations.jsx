@@ -73,12 +73,12 @@ function Visualization() {
               </Row>
             </Form>
             <Row>
-              <Col xs={12} md={6} lg={4}>
+              <Col xs={12} md={12} lg={12}>
                 <BarChart district={district} />
               </Col>
-              <Col xs={12} md={6} lg={4}>
+              {/* <Col xs={12} md={6} lg={4}>
                 <SubDivAvgRatChart district={district} />
-              </Col>
+              </Col> */}
             </Row>
             <Row className='mt-5 text-center'>
               <Col xs={12} md={12} lg={12}>
