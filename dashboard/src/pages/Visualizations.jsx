@@ -9,6 +9,8 @@ import Header from '../partials/Header';
 import DistrictWise from '../charts/DistrictWise';
 import BarChart from '../charts/BarChart';
 import HoriBarChart from '../charts/HoriBarChart';
+import SubDivAvgRatChart from '../charts/SubDivAvgRatChart';
+import DisRatingChart from '../charts/DisRatingChart';
 
 function Visualization() {
 
@@ -71,6 +73,12 @@ function Visualization() {
               </Col>
               <Col xs={12} md={6} lg={4}>
                 <DistrictWise />
+              </Col>
+              <Col xs={12} md={6} lg={4}>
+                <SubDivAvgRatChart district={district} />
+              </Col>
+              <Col xs={12} md={12} lg={12}>
+                <DisRatingChart />
               </Col>
             </Row>
           </Container>
