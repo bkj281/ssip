@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from stations.models import stationModel
-from .serializers import FeedbackSerializers, RatingCountSerializer, SubdivisionAvgSerializer, SubdivisionCountSerializer
+from .serializers import FeedbackSerializers, RatingCountSerializer, SubdivisionCountSerializer
 from .models import responseModel
 from verification.models import phoneModel
 
@@ -454,3 +454,14 @@ class GetCountForEachRating(APIView):
                 status=status.HTTP_200_OK
             )
 
+
+class GetRes2(APIView):
+
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        data = responseModel.objects.all().order_by('res2').values("res2").annotate(total=Count('res2'))
+        lst = list(data)
+        return Response(
+            data=lst,
+                status=status.HTTP_200_OK
+            )
