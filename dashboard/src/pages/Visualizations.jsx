@@ -48,8 +48,17 @@ function Visualization() {
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className='mt-5'>
           <Container className='text-center'>
-            <Form>
-              <Row className="mb-3">
+            <Row>
+              <Col xs={12} md={6} lg={4}>
+                {/* <h4>Overall Ratings</h4> */}
+                <HoriBarChart />
+              </Col>
+              <Col xs={12} md={6} lg={4}>
+                <DistrictWise />
+              </Col>
+            </Row>
+            <Form className='mx-auto d-block'>
+              <Row className="my-5 justify-center">
                 <Form.Group className="mb-3" as={Col} xs={6} md={3}>
                   <Form.Label>District</Form.Label>
                   <Form.Select name="district" value={district} onChange={(e) => setDistrict(e.target.value)}>
@@ -63,14 +72,7 @@ function Visualization() {
             </Form>
             <Row>
               <Col xs={12} md={6} lg={4}>
-                <h4>Overall Ratings</h4>
-                <HoriBarChart />
-              </Col>
-              <Col xs={12} md={6} lg={4}>
                 <BarChart district={district} />
-              </Col>
-              <Col xs={12} md={6} lg={4}>
-                <DistrictWise />
               </Col>
             </Row>
           </Container>

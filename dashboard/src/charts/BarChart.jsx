@@ -46,7 +46,7 @@ const BarChart = ({ district }) => {
   let data = {
     labels: sub,
     datasets: [{
-      label: sub,
+      label: [],
       data: count,
       backgroundColor: [
         'rgba(255, 99, 132, 0.6)',
@@ -70,9 +70,10 @@ const BarChart = ({ district }) => {
 
   let options = {
     maintainAspectRatio: false,
-    title: {
-      display: true,
-      text: 'Subdivison'
+    plugins: {
+      legend: {
+        display: false
+      },
     },
     scales: {
       y: {
@@ -96,7 +97,7 @@ const BarChart = ({ district }) => {
 
   return (
     <>
-      <div style={{ height: '336px', margin: '1em' }}>
+      <div style={{ height: '386px', margin: '1em' }}>
         <Bar
           data={data}
           options={options}
