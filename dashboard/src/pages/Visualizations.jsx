@@ -82,7 +82,7 @@ function Visualization() {
             </Row>
             <Row className='mt-5 text-center'>
               <Col xs={12} md={12} lg={12}>
-                <h2>Overall Dynamic Data</h2>
+                <h2>Dynamic Data of Average rating of all Districts</h2>
                 <DisRatingChart />
               </Col>
             </Row>
