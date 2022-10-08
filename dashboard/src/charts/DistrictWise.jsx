@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-import { Pie } from 'react-chartjs-2'
+import { Doughnut } from 'react-chartjs-2'
 
 ChartJS.register(
   Tooltip,
@@ -15,7 +15,7 @@ const DistrictWise = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/rating-full/`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/res2-get/`, {
         method: 'GET',
         headers: {
           "Content-Type": "application/json",
@@ -27,7 +27,7 @@ const DistrictWise = () => {
       let x = [];
       let y = [];
       for (let i of result) {
-        x.push(i.res4)
+        x.push(i.res2)
         y.push(i.total)
       }
       setCount(y)
@@ -43,14 +43,12 @@ const DistrictWise = () => {
       backgroundColor: [
         'rgba(255, 99, 132, 0.6)',
         'rgba(54, 162, 235, 0.6)',
-        'rgba(255, 206, 86, 0.6)',
         'rgba(153, 102, 255, 0.6)',
         'rgba(255, 159, 64, 0.6)'
       ],
       borderColor: [
         'rgba(255, 99, 132, 1)',
         'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
         'rgba(153, 102, 255, 1)',
         'rgba(255, 159, 64, 1)'
       ],
@@ -61,7 +59,7 @@ const DistrictWise = () => {
   return (
     <>
       <div style={{ height: '336px', margin: '1em' }}>
-        <Pie
+        <Doughnut
           data={data}
         />
       </div>

@@ -93,7 +93,7 @@ const SubDivAvgRatChart = ({ district }) => {
 
   return (
     <>
-      <div style={{ height: '336px', margin: '1em' }}>
+      <div style={{ height: '386px', margin: '1em' }}>
         <Bar
           data={data}
           options={options}

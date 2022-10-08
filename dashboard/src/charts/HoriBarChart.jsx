@@ -38,7 +38,7 @@ const HoriBarChart = () => {
   let data = {
     labels: sub,
     datasets: [{
-      label: 'Ratings',
+      label: 'Overall Ratings',
       data: count,
       backgroundColor: [
         // 'rgba(255, 99, 132, 0.6)',

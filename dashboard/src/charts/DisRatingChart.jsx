@@ -24,7 +24,7 @@ const DisRatingChart = ({ districts }) => {
       });
       const result = await res.json();
       // console.log(result);
-      for (let i=0; i<districts; i++) {
+      for (let i = 0; i < districts; i++) {
         result.data[districts[i]] += 0;
       }
       console.log(result.data);
