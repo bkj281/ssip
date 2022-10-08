@@ -31,10 +31,17 @@ const BarChart = ({ district }) => {
         x.push(i.subdivision)
         y.push(i.count)
       }
-      setCount(y)
-      setSub(x)
+      handleCount(y);
+      handleSub(x);
     })();
-  }, []);
+  }, [district]);
+
+  const handleSub = (x) => {
+    setSub(x);
+  };
+  const handleCount = (x) => {
+    setCount(x);
+  };
 
   let data = {
     labels: sub,
@@ -72,17 +79,29 @@ const BarChart = ({ district }) => {
         // beginAtZero: true,
         ticks: {
           stepSize: 1
-        }
-      }
+        },
+        title: {
+          display: true,
+          text: 'Number of Feedbacks',
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: district,
+        },
+      },
     }
   }
 
   return (
     <>
-      <Bar
-        data={data}
-        options={options}
-      />
+      <div style={{ height: '336px', margin: '1em' }}>
+        <Bar
+          data={data}
+          options={options}
+        />
+      </div>
     </>
   );
 }

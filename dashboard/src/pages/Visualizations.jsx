@@ -8,6 +8,7 @@ import Header from '../partials/Header';
 // import PoliceStationRating from '../partials/dashboard/PoliceStationRating';
 import DistrictWise from '../charts/DistrictWise';
 import BarChart from '../charts/BarChart';
+import HoriBarChart from '../charts/HoriBarChart';
 
 function Visualization() {
 
@@ -63,10 +64,13 @@ function Visualization() {
             <Row>
               <Col xs={12} md={6} lg={4}>
                 <h4>Overall Ratings</h4>
-                <DistrictWise />
+                <HoriBarChart />
               </Col>
               <Col xs={12} md={6} lg={4}>
                 <BarChart district={district} />
+              </Col>
+              <Col xs={12} md={6} lg={4}>
+                <DistrictWise />
               </Col>
             </Row>
           </Container>
