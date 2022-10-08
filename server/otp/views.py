@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from otp.serializers import ResetPasswordSerializer, NewPasswordSerializer
+from otp.serializers import ResetPasswordSerializer, NewPasswordSerializer, GetCaptchaTokenSerializer
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 
@@ -189,3 +189,9 @@ class NewPassword(generics.GenericAPIView):
             },
             status=status.HTTP_200_OK
         )
+
+class GetCaptchaTokenAPI(APIView):
+   
+    serializer_class = GetCaptchaTokenSerializer()
+
+        

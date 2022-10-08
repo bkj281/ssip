@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView
 )
-from .views import MyTokenObtainPairView, RegisterHere, VerifyToken, ResetPassword, NewPassword
+from .views import MyTokenObtainPairView, RegisterHere, VerifyToken, ResetPassword, NewPassword, GetCaptchaTokenAPI
 
 urlpatterns = [
     path('verify/', include('verification.urls')),
@@ -21,4 +21,5 @@ urlpatterns = [
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/verify/', TokenVerifyView.as_view()),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/captcha/', include('rest_captcha.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
