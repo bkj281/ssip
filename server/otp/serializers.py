@@ -6,6 +6,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from rest_framework.exceptions import AuthenticationFailed
+from rest_captcha.serializers import RestCaptchaSerializer
 
 from otp.utils import Util
 
@@ -47,3 +48,6 @@ class NewPasswordSerializer(serializers.Serializer):
         except Exception as e:
             raise AuthenticationFailed('The reset link is invalid', 401)
         return super().validate(attrs)
+
+class GetCaptchaTokenSerializer(RestCaptchaSerializer):
+    pass

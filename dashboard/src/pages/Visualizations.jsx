@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Col, Row, Form } from 'react-bootstrap';
+import React, { useState, useEffect, createRef } from 'react';
+import { Button, Container, Col, Row, Form } from 'react-bootstrap';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 // import Rating from '../partials/dashboard/Rating';
-// import FeedbackViz from '../partials/dashboard/FeedbackViz';
-// import DistrictWise from '../partials/dashboard/DistrictWise';
-// import PoliceStationRating from '../partials/dashboard/PoliceStationRating';
 import DistrictWise from '../charts/DistrictWise';
 import BarChart from '../charts/BarChart';
 import HoriBarChart from '../charts/HoriBarChart';
 import SubDivAvgRatChart from '../charts/SubDivAvgRatChart';
 import DisRatingChart from '../charts/DisRatingChart';
+import jsPDF from 'jspdf'
 
 function Visualization() {
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [district, setDistrict] = useState("Ahmedabad")
   const [dis, setDis] = useState([])
+
+  const ref = createRef();
 
   useEffect(() => {
     (async () => {
@@ -33,12 +33,19 @@ function Visualization() {
     })();
   }, [district]);
 
-  const handleSearch = async () => {
-
+  const generatePDF = async () => {
+    // document.getElementById('hide').style.display = 'none!important';
+    document.getElementById('hide').setAttribute('style', 'display:none !important')
+    let doc = new jsPDF('landscape', 'px', 'a2');
+    await doc.html(document.getElementById('one'), {
+      callback: (doc) => {
+        doc.save();
+      }
+    });
+    document.getElementById('hide').setAttribute('style', 'display:block !important')
   }
 
   return (
-
     <div className="flex h-screen overflow-hidden">
 
       {/* Sidebar */}
@@ -48,8 +55,13 @@ function Visualization() {
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <main className='mt-5'>
-          <Container className='text-center'>
+
+        <Button onClick={generatePDF} style={{ position: 'fixed', bottom: "25px", right: "25px" }}>
+          Download Reports
+        </Button>
+
+        <main className='mt-5' ref={ref}>
+          <Container className='text-center' id="one">
             <Row>
               <Col xs={12} md={6} lg={4}>
                 {/* <h4>Overall Ratings</h4> */}
@@ -59,7 +71,7 @@ function Visualization() {
                 <DistrictWise />
               </Col>
             </Row>
-            <Form className='mx-auto d-block'>
+            <Form className='mx-auto d-block' id="hide">
               <Row className="my-5 justify-center">
                 <Form.Group className="mb-3" as={Col} xs={6} md={3}>
                   <Form.Label>District</Form.Label>
@@ -67,20 +79,17 @@ function Visualization() {
                     {dis.map((d, id) => <option key={id} value={d}>{d}</option>)}
                   </Form.Select>
                 </Form.Group>
-                {/* <Form.Group as={Col} xs={12} md={9}>
-                  <button className="bg-emerald-500 mb-2 hover:bg-emerald-600 text-white font-bold py-1 px-3 mx-2 rounded" onClick={handleSearch}>Filter</button>
-                </Form.Group> */}
               </Row>
             </Form>
             <Row>
-              <Col xs={12} md={12} lg={12}>
+              <Col xs={12}>
                 <BarChart district={district} />
               </Col>
               {/* <Col xs={12} md={6} lg={4}>
                 <SubDivAvgRatChart district={district} />
               </Col> */}
             </Row>
-            <Row className='mt-5 text-center'>
+            <Row className='mt-5 text-center' id="three">
               <Col xs={12} md={12} lg={12}>
                 <h2>Dynamic Data of Average rating of all Districts</h2>
                 <DisRatingChart />
