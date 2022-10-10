@@ -3,15 +3,11 @@ import { Button, Container, Col, Row, Form } from 'react-bootstrap';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 // import Rating from '../partials/dashboard/Rating';
-// import FeedbackViz from '../partials/dashboard/FeedbackViz';
-// import DistrictWise from '../partials/dashboard/DistrictWise';
-// import PoliceStationRating from '../partials/dashboard/PoliceStationRating';
 import DistrictWise from '../charts/DistrictWise';
 import BarChart from '../charts/BarChart';
 import HoriBarChart from '../charts/HoriBarChart';
 import SubDivAvgRatChart from '../charts/SubDivAvgRatChart';
 import DisRatingChart from '../charts/DisRatingChart';
-import Pdf from 'react-to-pdf'
 import jsPDF from 'jspdf'
 
 function Visualization() {
@@ -85,13 +81,13 @@ function Visualization() {
                 </Form.Group>
               </Row>
             </Form>
-            <Row id="two">
-              <Col xs={12} md={6} lg={4}>
+            <Row>
+              <Col xs={12}>
                 <BarChart district={district} />
               </Col>
-              <Col xs={12} md={6} lg={4}>
+              {/* <Col xs={12} md={6} lg={4}>
                 <SubDivAvgRatChart district={district} />
-              </Col>
+              </Col> */}
             </Row>
             <Row className='mt-5 text-center' id="three">
               <Col xs={12} md={12} lg={12}>

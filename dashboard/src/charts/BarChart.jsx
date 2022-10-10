@@ -11,7 +11,8 @@ ChartJS.register(
 const BarChart = ({ district }) => {
 
   const [sub, setSub] = useState([]);
-  const [count, setCount] = useState([])
+  const [count, setCount] = useState([]);
+  const [avg, setAvg] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -31,17 +32,33 @@ const BarChart = ({ district }) => {
         x.push(i.subdivision)
         y.push(i.count)
       }
-      handleCount(y);
-      handleSub(x);
+      setSub(x);
+      setCount(y);
+    })();
+    (async () => {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/feedback/avg-sub-div/`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem("access")}`,
+        },
+        body: JSON.stringify({ district }),
+      });
+      const result = await res.json();
+      console.log(result);
+      let x = Object.keys(result.data);
+      let y = Object.values(result.data);
+      let z = Array(x.length);
+      for (let i=0; i<x.length; i++) {
+        for (let j=0; j<sub.length; j++) {
+          if (sub[j] == x[i]) {
+            z[i] = y[j];
+          }
+        }
+      }
+      setAvg(z);
     })();
   }, [district]);
-
-  const handleSub = (x) => {
-    setSub(x);
-  };
-  const handleCount = (x) => {
-    setCount(x);
-  };
 
   let data = {
     labels: sub,
@@ -73,6 +90,14 @@ const BarChart = ({ district }) => {
     plugins: {
       legend: {
         display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: context => {
+            console.log(context.dataIndex);
+            return avg[context.dataIndex];
+          },
+        }
       },
     },
     scales: {
